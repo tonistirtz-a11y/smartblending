@@ -1730,25 +1730,7 @@ function openWordCountPicker(lvl, activity){
       btn.style.display = hide ? 'none' : 'flex';
     }
   });
- function showIllustration(){
-  const s=activeSentences()[sentIdx];
-  const wrap=document.getElementById('illus-wrap');
-  const svgEl=document.getElementById('illus-svg');
-  const imgEl=document.getElementById('illus-img');
-  if(svgEl)svgEl.style.display='none';
-  wrap.style.display='block';
-  const canvas=document.getElementById('illus-canvas-overlay');
-  if(canvas){canvas.style.display='block';canvas.style.opacity='1';}
-  playAudio('prompt_sent_scratch.mp3','Scratch away the picture!',token,0.9);
-  if(imgEl){
-    imgEl.style.display='block';
-    imgEl.onload=()=>{ initScratch(); };
-    imgEl.onerror=()=>{ initScratch(); };
-    imgEl.src='https://raw.githubusercontent.com/tonistirtz-a11y/smartblending/main/'+s.illustration+'.jpg';
-  } else {
-    initScratch();
-  }
-}
+ 
   } else {
     // Split into decodable core vs proper nouns + sight words
     const core    = allWords.filter(w=>!w.properNoun && !w.sightWord);
