@@ -850,7 +850,6 @@ function introButtonTapped(){
   btn.disabled=true; btn.style.opacity='0.6';
   playWelcome();
   setTimeout(()=>{
-    playAudio('prompt_intro.mp3', "Ready! Let's build some words!", token);
     document.getElementById('intro-start-btn').style.display='inline-block';
   }, 800);
 }
