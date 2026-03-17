@@ -5442,8 +5442,9 @@ window.onload=function(){
   // Skip intro if already seen in this browser — saves therapists clicking through every session
   try{
     if(localStorage.getItem('sb_intro_seen')==='1'){
-      document.getElementById('intro-screen').style.display='none';
-      document.getElementById('level-gate').style.display='flex';
+  document.getElementById('intro-screen').style.display='flex';
+  document.getElementById('intro-start-btn').style.display='inline-block';
+}
     }
     // Restore last-used level highlight
     const lastLvl = parseInt(localStorage.getItem('sb_last_level')||'0');
