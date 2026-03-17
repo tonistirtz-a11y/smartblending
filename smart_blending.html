@@ -1686,6 +1686,7 @@ function introButtonTapped(){
   playWelcome();
   // Show the "Let's go" button after a short moment so user can see it
   setTimeout(()=>{
+    playAudio('prompt_intro.mp3', "Ready! Let's build some words!", token);
     document.getElementById('intro-start-btn').style.display='inline-block';
   }, 800);
 }
