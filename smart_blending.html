@@ -1747,6 +1747,10 @@ function showIllustration(){
     imgEl.onload=()=>{ initScratch(); };
     imgEl.onerror=()=>{ initScratch(); };
     imgEl.src='https://raw.githubusercontent.com/tonistirtz-a11y/smartblending/main/'+s.illustration+'.jpg';
+imgEl.onerror=()=>{
+  imgEl.onerror=()=>{ initScratch(); };
+  imgEl.src='https://raw.githubusercontent.com/tonistirtz-a11y/smartblending/main/'+s.illustration+'.png';
+};
   } else {
     initScratch();
   }
