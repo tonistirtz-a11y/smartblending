@@ -1185,7 +1185,13 @@ async function setStep(step){
     const tip=document.getElementById('blend-audio-tip');
     if(tip){ if(curWordIdx===1&&!blendTipShown){blendTipShown=true;tip.style.display='block';setTimeout(()=>{tip.style.display='none';},5000);}else{tip.style.display='none';} }
     const dl=document.getElementById('drag-layer');
-    if(dl){ Array.from(dl.querySelectorAll('.tile')).forEach(t=>{t.classList.remove('dragging');t.style.position='absolute';document.getElementById('staging-area').appendChild(t);}); }
+  if(dl){ 
+  Array.from(dl.querySelectorAll('.tile')).forEach(t => {
+    t.classList.remove('dragging');
+    t.style.position = 'relative'; // Change 'absolute' to 'relative'
+    document.getElementById('staging-area').appendChild(t);
+  }); 
+}
     const allTiles=Array.from(document.querySelectorAll('#staging-area .tile, #box-area .tile')).sort((a,b)=>parseInt(a.dataset.oi||0)-parseInt(b.dataset.oi||0));
     allTiles.forEach(t=>{if(t.parentNode)t.parentNode.removeChild(t);});
     const blendBoxes=Array.from(document.querySelectorAll('#box-area .box'));
