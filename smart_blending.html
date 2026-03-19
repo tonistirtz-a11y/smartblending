@@ -9,20 +9,21 @@
 body {
   font-family: "Comic Sans MS","Chalkboard SE","Comic Neue",sans-serif;
   background-color: #F3E8FF;
-  background-image: url('https://pub-16ad0bb3325b4807b8d8068509e4f23e.r2.dev/images/background_classroom.jpg');
+  background-image: url('cave.jpg');
   background-size: cover;
-  background-position: center top;
+  background-position: center center;
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;
   color: #1a202c;
-  margin:0; padding:0; min-height:100vh;
+  margin:0; padding-top:45px; min-height:100vh;
   display:flex; flex-direction:column; overflow:hidden;
   touch-action: pan-y;
   overscroll-behavior: none;
+  transition: background-image 0.5s ease;
 }
 #intro-screen {
   position:fixed; inset:0; z-index:10000;
-  background:linear-gradient(160deg,#6B46C1 0%,#9F7AEA 50%,#B794F4 100%);
+  background: url('treewelcome.jpg') center/cover fixed;
   display:flex; flex-direction:column;
   justify-content:center; align-items:center;
   padding:40px 30px; text-align:center;
@@ -30,7 +31,58 @@ body {
 #intro-screen h1 { color:white; font-size:2.6rem; margin:0 0 24px; text-shadow:0 2px 8px rgba(0,0,0,.2); }
 #intro-screen p { color:rgba(255,255,255,.93); font-size:1.2rem; line-height:1.8; max-width:660px; background:rgba(255,255,255,.12); border-radius:20px; padding:22px 28px; margin:0 0 32px; }
 #intro-btn { background:white; color:#6B46C1; border:none; border-radius:30px; padding:16px 48px; font-size:1.3rem; font-weight:bold; cursor:pointer; box-shadow:0 6px 0 rgba(0,0,0,.15); transition:transform .1s,box-shadow .1s; font-family:inherit; }
-#intro-btn:active { transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.15); }/* --- THE WIGGLE ANIMATION --- */
+
+.magical-btn, #intro-btn, .activity-btn, .wcp-btn, .level-card, .confirm-modal-btn, #sent-next-btn, #sent-confirm-btn, #cs-hear-word-btn, #cs-tile-next-btn, #cs-hear-btn, #intro-start-btn {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-radius: 18px !important;
+  border: none !important;
+  border-bottom: 6px solid #BEE3F8 !important;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1) !important;
+  color: #2D3748 !important;
+  font-weight: bold !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+  transition: transform 0.1s, border-bottom-width 0.1s !important;
+}
+.magical-btn:active, #intro-btn:active, .activity-btn:active, .wcp-btn:active, .level-card:active, .confirm-modal-btn:active, #sent-next-btn:active, #sent-confirm-btn:active, #cs-hear-word-btn:active, #cs-tile-next-btn:active, #cs-hear-btn:active, #intro-start-btn:active {
+  transform: translateY(4px) !important;
+  border-bottom-width: 2px !important;
+}
+
+.workspace-mat {
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 24px;
+  padding: 20px;
+  width: 100%;
+  max-width: 860px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px auto;
+  pointer-events: none;
+}
+.workspace-mat > * {
+  pointer-events: auto;
+}
+.box, .word-tile, .tile, .cs-tile {
+  pointer-events: auto !important;
+}
+.frosted-header {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 12px 24px;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+/* --- THE WIGGLE ANIMATION --- */
 @keyframes tileWiggle {
   0% { transform: rotate(0deg); }
   25% { transform: rotate(7deg); }
@@ -42,14 +94,37 @@ body {
   animation: tileWiggle 0.4s ease-in-out;
 }
 
-#level-gate { position:fixed; inset:0; background:white; z-index:9999; display:none; flex-direction:column; align-items:center; padding:40px 20px; overflow-y:auto; }
-.level-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; width:100%; max-width:1050px; margin-top:20px; }
-.level-card { background:#EBF8FF; border:3px solid #90CDF4; border-radius:16px; padding:14px 16px; text-align:left; cursor:pointer; box-shadow:0 5px 0 #90CDF4; transition:transform .1s,box-shadow .1s; display:flex; flex-direction:column; gap:4px; }
+#level-gate { position:fixed; inset:0; background:url('porch.jpg') center/cover fixed; z-index:9999; display:none; flex-direction:column; align-items:center; padding:40px 20px; overflow-y:auto; }
+.level-grid {
+  display:grid; 
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); 
+  gap:10px; 
+  width:100%; 
+  max-width:1050px; 
+  margin-top:10px;
+}
+.level-card {
+  width:100%;
+  aspect-ratio: 1 / 1;
+  background:#EBF8FF; 
+  border:3px solid #90CDF4; 
+  border-radius:16px; 
+  padding:10px; 
+  text-align:center; 
+  cursor:pointer; 
+  box-shadow:0 5px 0 #90CDF4; 
+  transition:transform .1s,box-shadow .1s; 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center;
+  justify-content:center;
+  gap:4px; 
+}
 .level-card:active { transform:translateY(4px); box-shadow:0 1px 0 #90CDF4; }
-.level-tag { font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:#2B6CB0; background:#BEE3F8; display:inline-block; padding:2px 8px; border-radius:20px; align-self:flex-start; }
-.level-num { font-size:1.25rem; font-weight:800; color:#2B6CB0; margin-top:2px; }
-.level-label { font-size:0.82rem; font-weight:600; color:#2D3748; line-height:1.3; }
-.level-samples { font-size:0.78rem; color:#718096; font-style:italic; margin-top:2px; }
+.level-tag { font-size:0.55rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:#2B6CB0; background:#BEE3F8; display:inline-block; padding:2px 6px; border-radius:12px; }
+.level-num { font-size:1rem; font-weight:800; color:#2B6CB0; margin-top:2px; }
+.level-label { font-size:0.7rem; font-weight:600; color:#2D3748; line-height:1.2; }
+.level-samples { font-size:0.65rem; color:#718096; font-style:italic; margin-top:2px; display:none; }
 .last-used-badge { font-size:0.68rem; font-weight:800; color:#553C9A; background:#E9D8FD; padding:2px 8px; border-radius:20px; display:inline-block; align-self:flex-start; margin-top:4px; }
 
 header { padding:0.5rem 1rem; display:flex; justify-content:space-between; align-items:center; visibility:hidden; z-index:100; }
@@ -115,7 +190,8 @@ header { padding:0.5rem 1rem; display:flex; justify-content:space-between; align
   touch-action:none; 
   -webkit-user-select:none; 
 }
-.tile.dragging { transform:scale(1.15)!important; opacity:.9; z-index:1000; cursor:grabbing; position:fixed!important; }
+.tile.dragging { transform:scale(1.15)!important; opacity:.9; z-index:9999 !important; cursor:grabbing; position:fixed!important; transition:none!important; }
+.dragging { transition: none !important; }
 .tile.bounce { animation: tileBounce 0.5s ease; }
 @keyframes tileBounce { 0%{transform:rotate(0deg) scale(1);} 20%{transform:rotate(-15deg) scale(1.15);} 40%{transform:rotate(12deg) scale(1.1);} 60%{transform:rotate(-8deg) scale(1.05);} 80%{transform:rotate(5deg) scale(1.02);} 100%{transform:rotate(0deg) scale(1);} }
 
@@ -151,7 +227,7 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 
 @media(max-width:600px){ .box{width:88px;height:88px;} .tile{width:80px;height:80px;font-size:2.8rem;} #staging-area{height:240px;} #slider-wrap{max-width:95%;} }
 
-#activity-picker { position:fixed; inset:0; z-index:9998; background:linear-gradient(160deg,#553C9A 0%,#805AD5 50%,#B794F4 100%); display:none; flex-direction:column; justify-content:center; align-items:center; padding:30px 20px; gap:20px; text-align:center; }
+#activity-picker { position:fixed; inset:0; z-index:9998; background:url('treehouse.jpg') center/cover fixed; display:none; flex-direction:column; justify-content:center; align-items:center; padding:30px 20px; gap:20px; text-align:center; }
 #activity-picker h2 { color:white; font-size:2rem; margin:0 0 8px; text-shadow:0 2px 8px rgba(0,0,0,.2); }
 #activity-picker p { color:rgba(255,255,255,.85); font-size:1rem; margin:0 0 10px; }
 .activity-btn { width:100%; max-width:460px; background:white; border:none; border-radius:24px; padding:20px 28px; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:18px; box-shadow:0 8px 0 rgba(0,0,0,.15); transition:transform .1s, box-shadow .1s; text-align:left; }
@@ -174,7 +250,17 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 .cs-clear-btn:hover { background:#FFF5F5; }
 
 #sentence-view { display:none; flex-direction:column; align-items:center; width:100%; gap:12px; }
-#sent-staging { position:relative; width:100%; max-width:780px; height:160px; margin-bottom:4px; }
+#sent-staging { 
+  position:relative; 
+  width:100%; 
+  max-width:780px; 
+  min-height:160px; 
+  margin-bottom:4px; 
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: center; 
+  gap: 15px; 
+}
 #sent-drop-row { 
   display:inline-flex; 
   flex-wrap:nowrap; 
@@ -195,10 +281,10 @@ input:checked + .slider-round:before { transform:translateX(26px); }
   transition: all .2s; 
   align-self:center; 
 }
-#sent-drop-wrap { display:flex; justify-content:center; width:100%; }
-.word-tile { min-width:70px; height:60px; padding:0 16px; border-radius:14px; border:2px solid #CBD5E0; background:white; color:#2D3748; display:flex; justify-content:center; align-items:center; font-size:1.5rem; font-weight:bold; cursor:grab; box-shadow:0 4px 0 rgba(0,0,0,.08); user-select:none; touch-action:none; position:absolute; transition:box-shadow .15s; }
+#sent-drop-wrap { display:flex; justify-content:center; width:100%; flex-wrap:wrap; gap:15px; }
+.word-tile { min-width:70px; height:60px; padding:0 16px; border-radius:14px; border:2px solid #CBD5E0; background:white; color:#2D3748; display:flex; justify-content:center; align-items:center; font-size:1.5rem; font-weight:bold; cursor:grab; box-shadow:0 4px 0 rgba(0,0,0,.08); user-select:none; touch-action:none; position:relative; transition:box-shadow .15s; }
 .word-tile.period-tile { min-width:44px; padding:0 12px; font-size:2rem; }
-.word-tile.dragging { opacity:.85; z-index:1000; cursor:grabbing; position:fixed !important; transform:scale(1.08) !important; box-shadow:0 8px 24px rgba(0,0,0,.18); }
+.word-tile.dragging { opacity:.85; z-index:9999 !important; cursor:grabbing; position:fixed !important; transition:none !important; transform:scale(1.08) !important; box-shadow:0 8px 24px rgba(0,0,0,.18); }
 .word-tile.placed { position:relative; left:auto !important; top:auto !important; transform:none !important; cursor:grab; }
 .word-tile.bounce-back { animation:sentBounce .5s ease; }
 @keyframes sentBounce { 0%{transform:scale(1);} 25%{transform:scale(1.2) rotate(-8deg);} 50%{transform:scale(0.9) rotate(6deg);} 75%{transform:scale(1.05) rotate(-3deg);} 100%{transform:scale(1) rotate(0deg);} }
@@ -218,9 +304,9 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 #illus-wrap { 
   display:none; 
   position:relative; 
-  /* New, larger size below */
-  width:480px; 
-  height:400px; 
+  width:360px; 
+  height:300px; 
+  margin-left: 40px;
   
   border-radius:24px; 
   overflow:hidden; 
@@ -240,15 +326,82 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 </head>
 <body>
 
+<div id="global-top-strip" style="position:fixed; top:0; left:0; right:0; height:44px; background:rgba(255,255,255,0.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:19000; display:flex; justify-content:flex-start; align-items:center; padding:0 20px; gap:20px; box-shadow:0 2px 10px rgba(0,0,0,0.05); pointer-events:auto;">
+  <button onclick="replayIntro()" style="background:none;border:none;color:#2D3748;font-size:0.9rem;font-weight:bold;cursor:pointer;font-family:inherit;text-decoration:none;">▶ Play introduction</button>
+  <button onclick="showHistory()" style="background:none;border:none;color:#2D3748;font-size:0.9rem;font-weight:bold;cursor:pointer;font-family:inherit;text-decoration:none;">📋 Session history</button>
+</div>
+
+<div id="teacher-nav">
+  <div id="teacher-nav-menu">
+    <button onclick="teacherJump('levels')">Levels</button>
+    <button onclick="teacherJump('blend')">Words</button>
+    <button onclick="teacherJump('sentence')">Sentences</button>
+    <button onclick="clearHistory(); toggleTeacherNav()">Reset</button>
+  </div>
+  <div id="teacher-nav-icon" onclick="toggleTeacherNav()">⚙️</div>
+</div>
+<style>
+#teacher-nav { position:fixed; top:2px; right:12px; z-index:20000; display:flex; align-items:flex-start; gap:10px; }
+#teacher-nav-icon { background:rgba(255,255,255,0.6); backdrop-filter:blur(5px); width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:1.3rem; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:transform 0.2s; user-select:none; border:2px solid rgba(255,255,255,0.8); }
+#teacher-nav-icon:hover { transform:rotate(45deg); }
+#teacher-nav-menu { display:none; background:rgba(255,255,255,0.85); backdrop-filter:blur(10px); border-radius:16px; padding:6px; box-shadow:0 8px 20px rgba(0,0,0,0.15); flex-direction:row; gap:6px; border:2px solid rgba(255,255,255,0.9); }
+#teacher-nav-menu button { background:#EBF8FF; border:none; border-radius:10px; padding:6px 12px; font-weight:bold; color:#2B6CB0; cursor:pointer; font-family:inherit; transition:background 0.1s; }
+#teacher-nav-menu button:hover { background:#BEE3F8; }
+</style>
+<script>
+function toggleTeacherNav(){
+  const m = document.getElementById('teacher-nav-menu');
+  m.style.display = m.style.display==='flex' ? 'none' : 'flex';
+}
+function teacherJump(dest){
+  document.getElementById('teacher-nav-menu').style.display='none';
+  stopAudio(); token++;
+  document.getElementById('intro-screen').style.display='none';
+  document.getElementById('confirm-modal').style.display='none';
+  document.getElementById('session-summary').style.display='none';
+  document.getElementById('custom-words-screen').style.display='none';
+  document.getElementById('history-screen').style.display='none';
+  document.getElementById('word-count-picker').style.display='none';
+  document.getElementById('activity-picker').style.display='none';
+  document.getElementById('cs-sub-picker').style.display='none';
+  document.getElementById('blending-view').style.display='none';
+  document.getElementById('writing-view').style.display='none';
+  document.getElementById('change-sound-view').style.display='none';
+  document.getElementById('sentence-view').style.display='none';
+  sessionWordList=null;
+
+  if(dest==='levels'){
+    document.body.style.backgroundImage="url('cave.jpg')";
+    document.getElementById('level-gate').style.display='flex';
+    document.getElementById('app-header').style.visibility='hidden';
+    document.getElementById('step-toolbar').style.display='none';
+  } else if(dest==='blend'){
+    document.body.style.backgroundImage="url('cave.jpg')";
+    document.getElementById('level-gate').style.display='none';
+    document.getElementById('app-header').style.visibility='visible';
+    document.getElementById('step-toolbar').style.display='flex';
+    curLevel=Math.max(1, curLevel);
+    sessionWordList = LEVELS[curLevel].words.slice();
+    curWordIdx=0;
+    loadWord();
+  } else if(dest==='sentence'){
+    document.body.style.backgroundImage="url('float.jpg')";
+    curLevel=Math.max(2, curLevel);
+    document.getElementById('level-gate').style.display='none';
+    startSentenceLevel(curLevel);
+  }
+}
+</script>
+
 <div id="intro-screen">
-  <h1>Welcome to Smart Blending! 🌟</h1>
-  <p>
-    We&#8217;re going to build words today &#8212; and you&#8217;re going to be really good at this.<br><br>
-    Here&#8217;s how it works. You&#8217;re going to <strong>listen</strong> to a word, find the sounds hiding inside it, and <strong>pull the letters into place</strong> &#8212; one sound at a time.<br><br>
-    Then we&#8217;re going to <strong>read it together</strong>. First, we&#8217;ll tap each sound &#8212; then we&#8217;ll slide them all together into the whole word. That&#8217;s the magic part. Then you&#8217;re going to <strong>tell your teacher how to write the word</strong> by saying the sounds.<br><br>
-    And at the end, you&#8217;re going to <strong>write it yourself</strong> while saying the sounds as you write the letters.
+  <!-- <h1> removed as requested to avoid redundancy with the background art -->
+  <p style="background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px; border-radius: 15px; margin: 0 auto; max-width: 80%; text-align: left; color: #2D3748; font-size: 1.15rem; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+    We’re going to build words today — and you’re going to be really good at this.<br><br>
+    Here’s how it works. You’re going to listen to a word, find the sounds hiding inside it, and pull the letters into place — one sound at a time.<br><br>
+    Then we’re going to read it together. First, we’ll tap each sound — then we’ll slide them all together into the whole word. That’s the magic part. Then you’re going to tell your teacher how to write the word by saying the sounds.<br><br>
+    And at the end, you’re going to write it yourself while saying the sounds as you write the letters.
   </p>
-  <button id="intro-btn" onclick="introButtonTapped()">Ready? Let&#8217;s build some words! &#9654;</button>
+  <button id="intro-btn" onclick="introButtonTapped()" style="margin-top: 30px; margin-bottom: 0;">Ready? Let’s build some words! ▶</button>
   <button id="intro-start-btn" onclick="dismissIntro()" style="display:none;margin-top:18px;background:#48BB78;color:white;border:none;border-radius:30px;padding:14px 40px;font-size:1.2rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 5px 0 #276749;">Let&#8217;s go! &#9654;</button>
 </div>
 
@@ -275,8 +428,10 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 </div>
 
 <div id="level-gate" style="display:none;">
-  <h1 style="color:#6B46C1;font-size:3.2rem;margin-bottom:5px;">Smart Blending</h1>
-  <p style="color:#718096;font-size:1.2rem;margin-bottom:6px;">Choose a level to start!</p>
+  <div class="frosted-header">
+    <h1 style="color:#6B46C1;font-size:3.2rem;margin-bottom:5px;">Smart Blending</h1>
+    <p style="color:#718096;font-size:1.2rem;margin-bottom:6px;font-weight:bold;">Choose a level to start!</p>
+  </div>
   <div style="display:flex;gap:16px;align-items:center;margin-bottom:24px;">
     <button onclick="replayIntro()" style="background:none;border:none;color:#9F7AEA;font-size:0.85rem;cursor:pointer;font-family:inherit;text-decoration:underline;">▶ Play introduction</button>
     <button onclick="showHistory()" style="background:none;border:none;color:#9F7AEA;font-size:0.85rem;cursor:pointer;font-family:inherit;text-decoration:underline;">📋 Session history</button>
@@ -336,8 +491,10 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 </div>
 
 <div id="activity-picker">
-  <h2>Level 2 Activities</h2>
-  <p>Choose an activity to start!</p>
+  <div class="frosted-header">
+    <h2 style="color:#553C9A;margin:0 0 8px;font-size:2rem;">Level 2 Activities</h2>
+    <p style="color:#2D3748;font-size:1.1rem;margin:0;font-weight:bold;">Choose an activity to start!</p>
+  </div>
   <button class="activity-btn" onclick="startBlendWithPicker()">
     <span class="act-icon">🧩</span>
     <span class="act-text"><span class="act-title">Activity 1 — Pull Tiles &amp; Blend</span><span class="act-desc">Pull each letter tile into place, then blend the word</span></span>
@@ -353,9 +510,11 @@ input:checked + .slider-round:before { transform:translateX(26px); }
   <button class="activity-back" onclick="backFromActivity()">← Back to Levels</button>
 </div>
 
-<div id="cs-sub-picker" style="display:none;position:fixed;inset:0;z-index:9997;background:linear-gradient(160deg,#2C5282 0%,#3182CE 50%,#63B3ED 100%);flex-direction:column;justify-content:center;align-items:center;padding:30px 20px;gap:18px;text-align:center;">
-  <h2 style="color:white;font-size:1.9rem;margin:0 0 4px;text-shadow:0 2px 8px rgba(0,0,0,.2);">Activity 2 — Change the Sound</h2>
-  <p style="color:rgba(255,255,255,.85);font-size:1rem;margin:0 0 6px;">How would you like to practice?</p>
+<div id="cs-sub-picker" style="display:none;position:fixed;inset:0;z-index:9997;background:url('treehouse.jpg') center/cover fixed;flex-direction:column;justify-content:center;align-items:center;padding:30px 20px;gap:18px;text-align:center;">
+  <div class="frosted-header">
+    <h2 style="color:#553C9A;font-size:1.9rem;margin:0 0 4px;">Activity 2 — Change the Sound</h2>
+    <p style="color:#2D3748;font-size:1rem;margin:0 0 6px;font-weight:bold;">How would you like to practice?</p>
+  </div>
   <button class="activity-btn" onclick="startActivity('cs-tiles')">
     <span class="act-icon">🧩</span>
     <span class="act-text"><span class="act-title">Drag Tiles</span><span class="act-desc">Swap one tile at a time to change the word</span></span>
@@ -367,7 +526,7 @@ input:checked + .slider-round:before { transform:translateX(26px); }
   <button class="activity-back" onclick="closeCsSubPicker()">← Back</button>
 </div>
 
-<div id="change-sound-view" style="display:none;">
+<div id="change-sound-view" class="workspace-mat" style="display:none;">
   <div id="cs-header" style="display:none;width:95%;max-width:860px;justify-content:space-between;align-items:center;padding:8px 4px 2px;flex-wrap:wrap;gap:8px;">
     <div id="cs-word-counter" style="font-size:1rem;color:#6B46C1;background:white;padding:6px 16px;border-radius:20px;font-weight:bold;"></div>
     <div id="cs-mode-badge" style="font-size:0.9rem;background:#BEE3F8;color:#2B6CB0;padding:5px 14px;border-radius:16px;font-weight:bold;"></div>
@@ -379,7 +538,7 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 
   <div id="cs-tiles-panel" style="display:none;flex-direction:column;align-items:center;width:100%;padding:0 16px 16px;gap:8px;">
     <div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:4px 0;">
-      <div id="cs-tile-instruction" style="display:none;"></div>
+      <div id="cs-tile-instruction" style="font-size:1.05rem;color:#2D3748;font-weight:bold;text-align:center;padding:4px 16px;background:rgba(255,255,255,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);display:none;"></div>
       <button id="cs-tile-repeat-btn" onclick="csRepeatInstruction()" title="Hear instruction again" style="display:none;background:linear-gradient(135deg,#6B46C1,#9F7AEA);color:white;border:none;border-radius:50%;width:40px;height:40px;font-size:1.1rem;cursor:pointer;box-shadow:0 3px 0 #44337A;flex-shrink:0;">🔊</button>
     </div>
     <div id="cs-tile-staging" style="position:relative;width:100%;max-width:760px;height:170px;border-radius:20px;background:rgba(255,255,255,0.45);border:2px dashed #C4B5FD;"></div>
@@ -431,7 +590,7 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 <header id="app-header">
   <div id="word-counter" class="word-counter">Word 1 of 11</div>
   <div id="step-indicator" class="step-badge">Step 1: Listen &amp; Build</div>
-  <div id="step-direction" style="font-size:1.05rem;color:#4A5568;font-weight:600;text-align:center;min-height:1.4em;margin-top:2px;margin-bottom:2px;padding:0 12px;"></div>
+  <div id="step-direction" style="font-size:1.05rem;color:#2D3748;font-weight:bold;text-align:center;min-height:1.4em;margin-top:2px;margin-bottom:2px;padding:4px 16px;background:rgba(255,255,255,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);"></div>
   <div style="display:flex;align-items:center;gap:8px;">
     <button id="timer-btn" onclick="toggleTimer()" title="Stopwatch" style="background:#EDF2F7;border:none;padding:8px 12px;border-radius:15px;font-weight:bold;color:#4A5568;cursor:pointer;font-family:inherit;font-size:0.9rem;">⏱ <span id="timer-display">0:00</span></button>
     <button onclick="confirmExit()" style="background:#FED7E2;border:none;padding:8px 15px;border-radius:15px;font-weight:bold;color:#97266D;cursor:pointer;">&times; Exit</button>
@@ -439,7 +598,10 @@ input:checked + .slider-round:before { transform:translateX(26px); }
 </header>
 
 <div class="main-workspace">
-  <div id="blending-view">
+  <div id="blending-view" class="workspace-mat">
+    <div style="width:100%; max-width:600px; display:flex; justify-content:flex-end; padding:4px 10px 0;">
+      <button id="regular-voice-btn" onclick="playRegularVoice()" onpointerdown="this.style.transform='scale(0.95)'" onpointerup="this.style.transform='none'" onpointerleave="this.style.transform='none'" style="background:#4299E1;color:white;border:none;border-radius:20px;padding:8px 16px;font-size:1.1rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 0 #2B6CB0;transition:transform .1s,box-shadow .1s;user-select:none;">🔊 Listen</button>
+    </div>
     <div id="staging-area"></div>
     <div id="box-area"></div>
     <div id="slider-wrap">
@@ -483,12 +645,12 @@ input:checked + .slider-round:before { transform:translateX(26px); }
       <polygon points="20,80 80,20 80,80" fill="#F6AD55"/>
     </svg>
   </div>
-  <div id="drag-layer" style="position:fixed;inset:0;pointer-events:none;z-index:500;"></div>
+  <div id="drag-layer" style="position:fixed;inset:0;pointer-events:none;z-index:10000;"></div>
 
-  <div id="sentence-view">
-    <div id="sent-counter" style="font-size:1rem;color:#6B46C1;background:white;padding:6px 18px;border-radius:20px;font-weight:bold;align-self:flex-end;margin-right:8px;"></div>
-    <div id="sent-main-row" style="display:flex;flex-direction:row;align-items:flex-start;gap:24px;width:100%;justify-content:center;">
-      <div id="sent-left" style="display:flex;flex-direction:column;align-items:center;gap:14px;flex:1;min-width:0;">
+  <div id="sentence-view" style="display:none; width:100%; max-width:1100px; flex-direction:column; align-items:center; margin:10px auto; padding:0 20px; box-sizing:border-box;">
+    <div id="sent-counter" style="font-size:1rem;color:#6B46C1;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:8px 20px;border-radius:20px;font-weight:bold;align-self:flex-end;margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);"></div>
+    <div id="sent-main-row" style="display:flex;flex-direction:row;align-items:center;width:100%;justify-content:center;gap:20px;">
+      <div id="sent-left" class="workspace-mat" style="display:flex;flex-direction:column;align-items:center;gap:14px;flex:1;min-width:0; margin:0;">
         <div id="sent-staging"></div>
         <div id="sent-drop-wrap"><div id="sent-drop-row"></div></div>
         <div id="sent-status"></div>
@@ -849,6 +1011,26 @@ function forcePronunciation(word){
   return w;
 }
 
+function getBestLocalVoice(){
+  const vs=window.speechSynthesis.getVoices();
+  const premium=vs.find(v=>v.name.includes('Enhanced')||v.name.includes('Premium')||v.name.includes('Natural'));
+  if(premium) return premium;
+  return vs.find(v=>v.name.includes('Samantha')||v.name.includes('Google US English'))||vs[0];
+}
+
+function playRegularVoice(){
+  synth.cancel();
+  const wordBank=sessionWordList||LEVELS[curLevel].words;
+  if(!wordBank) return;
+  const wo=wordBank[curWordIdx];
+  if(!wo) return;
+  const u=new SpeechSynthesisUtterance(wo.word);
+  const best=getBestLocalVoice();
+  if(best) u.voice=best;
+  u.rate=1.0;
+  synth.speak(u);
+}
+
 function tts(text,rate=1){
   return new Promise(res=>{
     synth.cancel();
@@ -1088,6 +1270,7 @@ function confirmExit(){
 
 function exitToLevels(){
   stopAudio(); token++;
+  document.body.style.backgroundImage="url('cave.jpg')";
   document.getElementById('app-header').style.visibility='hidden';
   document.getElementById('step-toolbar').style.display='none';
   document.getElementById('blending-view').style.display='none';
@@ -1122,21 +1305,14 @@ function loadWord(){
   let attempts=0;
   do{ tiles.sort(()=>Math.random()-.5); attempts++; if(attempts>200)break; }
   while(tiles.every((t,i)=>(t.g||t.p)===origLabels[i]));
-  const tileW=100,tileH=100,pad=8;
-  const aw=Math.max(stage.offsetWidth||500,300);
-  const ah=180;
-  const placed=[];
-  function noOverlap(x,y){ return placed.every(p=>Math.abs(p.x-x)>tileW+pad||Math.abs(p.y-y)>tileH+pad); }
   tiles.forEach(t=>{
     const el=document.createElement('div'); el.className='tile';
     let label=t.g||t.p;
     if(wo.properNoun&&t.id===0) label=label.charAt(0).toUpperCase()+label.slice(1);
     el.innerText=label;
-    if(wo.properNoun&&t.id===0){ const flag=document.createElement('span'); flag.innerText='🚩'; flag.style.cssText='position:absolute;top:4px;right:6px;font-size:0.9rem;pointer-events:none;'; el.style.position='absolute'; el.appendChild(flag); }
+    if(wo.properNoun&&t.id===0){ const flag=document.createElement('span'); flag.innerText='🚩'; flag.style.cssText='position:absolute;top:4px;right:6px;font-size:0.9rem;pointer-events:none;'; el.appendChild(flag); }
     el.dataset.phoneme=t.p; el.dataset.oi=t.id; el.style.opacity=0; el.onpointerdown=handleTileDown;
-    let x,y,att=0;
-    do{ x=Math.floor(Math.random()*(aw-tileW)); y=Math.floor(Math.random()*(ah-tileH)); att++; }while(!noOverlap(x,y)&&att<200);
-    placed.push({x,y}); el.style.left=x+'px'; el.style.top=y+'px'; el.style.transform='rotate('+(Math.random()*30-15)+'deg)';
+    el.style.transform='rotate('+(Math.random()*30-15)+'deg)';
     stage.appendChild(el);
   });
   setStep(1);
@@ -1421,10 +1597,24 @@ function playWordFast(){
 }
 
 // ── Tile drag ──
+
+document.addEventListener('touchstart', function(e) {
+  if (e.target.closest('.tile') || e.target.closest('.word-tile') || e.target.closest('.cs-tile')) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+document.addEventListener('touchmove', function(e) {
+  if (e.target.closest('.tile') || e.target.closest('.word-tile') || e.target.closest('.cs-tile')) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
 function getPhonemeAudioFile(phoneme){
   const map={'a':'phoneme_a.mp3','e':'phoneme_e.mp3','i':'phoneme_i.mp3','o':'phoneme_o.mp3','u':'phoneme_u.mp3','b':'phoneme_b.mp3','k':'phoneme_k.mp3','d':'phoneme_d.mp3','f':'phoneme_f.mp3','g':'phoneme_g.mp3','h':'phoneme_h.mp3','j':'phoneme_j.mp3','l':'phoneme_l.mp3','m':'phoneme_m.mp3','n':'phoneme_n.mp3','p':'phoneme_p.mp3','r':'phoneme_r.mp3','s':'phoneme_s.mp3','t':'phoneme_t.mp3','v':'phoneme_v.mp3','w':'phoneme_w.mp3','y':'phoneme_y.mp3','z':'phoneme_z.mp3','ks':'phoneme_x.mp3','sh':'phoneme_sh.mp3','ch':'phoneme_ch.mp3','th_u':'phoneme_th_unvoiced.mp3','th_v':'phoneme_th_voiced.mp3','wh':'phoneme_wh.mp3','ck':'phoneme_ck.mp3','ng':'phoneme_ng.mp3','qu':'phoneme_qu.mp3','kw':'phoneme_qu.mp3','tch':'phoneme_tch.mp3','ll':'phoneme_ll.mp3','ff':'phoneme_ff.mp3','ss':'phoneme_ss.mp3','zz':'phoneme_zz.mp3'};
   return map[phoneme]||null;
 }
+let cachedBoxes = [];
 function handleTileDown(e){
   if (e.cancelable) e.preventDefault(); 
   if(curStep!==1) return; stopAudio();
@@ -1436,6 +1626,8 @@ function handleTileDown(e){
   activeTile.classList.add('dragging'); activeTile.style.position='fixed';
   activeTile.style.left=(e.clientX-dragOff.x)+'px'; activeTile.style.top=(e.clientY-dragOff.y)+'px';
   document.addEventListener('pointermove',tileMove); document.addEventListener('pointerup',tileUp);
+  
+  cachedBoxes = Array.from(document.querySelectorAll('#box-area .box:not(.filled)')).map(b => ({ el: b, rect: b.getBoundingClientRect() }));
 }
 function tileMove(e) {
   if (e.cancelable) e.preventDefault();
@@ -1458,10 +1650,10 @@ function tileUp(e){
   activeTile.releasePointerCapture(e.pointerId);
   document.removeEventListener('pointermove',tileMove); document.removeEventListener('pointerup',tileUp);
   document.getElementById('drag-layer').style.pointerEvents='none';
-  const boxes=Array.from(document.querySelectorAll('#box-area .box')).filter(b=>!b.classList.contains('filled'));
   let dropped=false;
-  for(const box of boxes){
-    const r=box.getBoundingClientRect(); const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+  for(const obj of cachedBoxes){
+    const box = obj.el; const r = obj.rect;
+    const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
     if(Math.sqrt(dx*dx+dy*dy)<85){ box.appendChild(activeTile); box.classList.add('filled'); activeTile.classList.remove('dragging'); activeTile.style.position='static'; activeTile.style.transform='none'; dropped=true; checkFilled(); break; }
   }
  if (!dropped) {
@@ -1473,6 +1665,13 @@ function tileUp(e){
     activeTile.style.left = 'auto';         
     activeTile.style.top = 'auto';          
     activeTile.style.transform = 'none';
+    
+    // Add wiggle animation as visual feedback for 450ms
+    const t = activeTile;
+    t.classList.add('wiggle-effect');
+    setTimeout(() => {
+      if (t) t.classList.remove('wiggle-effect');
+    }, 450);
   }
   activeTile=null;
 }
@@ -1494,19 +1693,16 @@ function checkFilled(){
   }
 }
 function bounceTilesBack(boxes){
-  const stage=document.getElementById('staging-area'); const aw=Math.max(stage.offsetWidth||500,300);
-  const tileW=100,tileH=100,pad=8; const placed=[];
-  function noOverlap(x,y){return placed.every(p=>Math.abs(p.x-x)>tileW+pad||Math.abs(p.y-y)>tileH+pad);}
+  const stage=document.getElementById('staging-area');
   boxes.forEach(box=>{
     const tile=box.querySelector('.tile'); if(!tile)return;
     tile.classList.add('bounce'); setTimeout(()=>tile.classList.remove('bounce'),500);
     setTimeout(()=>{
       if(tile.parentNode)tile.parentNode.removeChild(tile);
       box.classList.remove('filled'); box.innerHTML='';
-      tile.style.position='absolute'; tile.style.transform='rotate('+(Math.random()*30-15)+'deg)';
-      let x,y,attempts=0;
-      do{x=Math.floor(Math.random()*(aw-tileW));y=Math.floor(Math.random()*80);attempts++;}while(!noOverlap(x,y)&&attempts<200);
-      placed.push({x,y}); tile.style.left=x+'px'; tile.style.top=y+'px'; stage.appendChild(tile);
+      tile.style.position='relative'; tile.style.left='auto'; tile.style.top='auto';
+      tile.style.transform='rotate('+(Math.random()*30-15)+'deg)';
+      stage.appendChild(tile);
     },300);
   });
 }
@@ -1652,6 +1848,7 @@ let scratchCtx=null,scratchDrawing=false,scratchRevealPct=0;
 
 function startSentenceLevel(lvl){
   sentIdx=0; if(lvl)curLevel=lvl;
+  document.body.style.backgroundImage="url('float.jpg')";
   document.getElementById('level-gate').style.display='none';
   document.getElementById('activity-picker').style.display='none';
   document.getElementById('change-sound-view').style.display='none';
@@ -1684,18 +1881,12 @@ function loadSentence(){
   stage.innerHTML='';
   const wordList=s.words.map((w,i)=>({w,i}));
   do{wordList.sort(()=>Math.random()-.5);}while(wordList.every((t,i)=>t.i===i));
-  const tw=90,th=60,pad=10;
-  const aw=Math.max(stage.offsetWidth||600,300);
-  const placed=[];
-  function noOv(x,y){return placed.every(p=>Math.abs(p.x-x)>tw+pad||Math.abs(p.y-y)>th+pad);}
   wordList.forEach(({w,i})=>{
     const el=document.createElement('div');
     el.className=w==='.'?'word-tile period-tile':'word-tile';
     el.innerText=w; el.dataset.oi=i; el.dataset.word=w;
     el.style.opacity='0'; el.onpointerdown=handleSentTileDown;
-    let x,y,att=0;
-    do{x=Math.floor(Math.random()*(aw-(w==='.'?50:tw)));y=Math.floor(Math.random()*(130-th));att++;}while(!noOv(x,y)&&att<200);
-    placed.push({x,y}); el.style.left=x+'px'; el.style.top=y+'px';
+    // Handled in global listeners to prevent iPad zooming
     el.style.transform='rotate('+(Math.random()*20-10)+'deg)';
     stage.appendChild(el);
   });
@@ -1703,6 +1894,7 @@ function loadSentence(){
   playAudio('prompt_sent_build.mp3','Put the words in order to make a sentence.',token,0.9);
 }
 
+let cachedSentWrapRect = null;
 function handleSentTileDown(e){
   e.preventDefault();
   activeSentTile=e.currentTarget; activeSentTile.setPointerCapture(e.pointerId);
@@ -1710,27 +1902,40 @@ function handleSentTileDown(e){
   sentDragOff={x:e.clientX-r.left,y:e.clientY-r.top};
   if(activeSentTile.classList.contains('placed')){
     activeSentTile.classList.remove('placed');
-    document.getElementById('sent-staging').appendChild(activeSentTile);
   }
+  const dl = document.getElementById('drag-layer'); dl.style.pointerEvents = 'auto'; dl.appendChild(activeSentTile);
   activeSentTile.classList.add('dragging'); activeSentTile.style.position='fixed';
   activeSentTile.style.left=(e.clientX-sentDragOff.x)+'px'; activeSentTile.style.top=(e.clientY-sentDragOff.y)+'px';
-  activeSentTile.style.zIndex=2000;
+  activeSentTile.style.zIndex=9999;
   document.addEventListener('pointermove',sentTileMove); document.addEventListener('pointerup',sentTileUp);
+  
+  cachedSentWrapRect = document.getElementById('sent-drop-wrap').getBoundingClientRect();
 }
 function sentTileMove(e){
   if(!activeSentTile)return;
-  activeSentTile.style.left=(e.clientX-sentDragOff.x)+'px'; activeSentTile.style.top=(e.clientY-sentDragOff.y)+'px';
-  const wrap=document.getElementById('sent-drop-wrap'); const rr=wrap.getBoundingClientRect();
-  const over=e.clientX>rr.left&&e.clientX<rr.right&&e.clientY>rr.top-30&&e.clientY<rr.bottom+30;
+  
+  // Boundary Guards: Clamping logic
+  const pad = 10;
+  const maxX = window.innerWidth - activeSentTile.offsetWidth - pad;
+  const maxY = window.innerHeight - activeSentTile.offsetHeight - pad;
+  let x = e.clientX - sentDragOff.x;
+  let y = e.clientY - sentDragOff.y;
+  
+  activeSentTile.style.left = Math.max(pad, Math.min(x, maxX)) + 'px';
+  activeSentTile.style.top = Math.max(pad, Math.min(y, maxY)) + 'px';
+  
+  const rr=cachedSentWrapRect;
+  const over = rr && e.clientX>rr.left && e.clientX<rr.right && e.clientY>rr.top-30 && e.clientY<rr.bottom+30;
   document.getElementById('sent-drop-row').classList.toggle('drag-over',over);
 }
 function sentTileUp(e){
   if(!activeSentTile)return;
   document.removeEventListener('pointermove',sentTileMove); document.removeEventListener('pointerup',sentTileUp);
+  document.getElementById('drag-layer').style.pointerEvents = 'none';
   activeSentTile.releasePointerCapture(e.pointerId);
   document.getElementById('sent-drop-row').classList.remove('drag-over');
-  const wrap=document.getElementById('sent-drop-wrap'); const rr=wrap.getBoundingClientRect();
-  const onRow=e.clientX>rr.left&&e.clientX<rr.right&&e.clientY>rr.top-30&&e.clientY<rr.bottom+30;
+  const rr=cachedSentWrapRect || document.getElementById('sent-drop-wrap').getBoundingClientRect();
+  const onRow = rr && e.clientX>rr.left && e.clientX<rr.right && e.clientY>rr.top-30 && e.clientY<rr.bottom+30;
   activeSentTile.classList.remove('dragging'); activeSentTile.style.zIndex='';
   if(onRow){
     activeSentTile.classList.add('placed'); activeSentTile.style.position='relative';
@@ -1738,8 +1943,19 @@ function sentTileUp(e){
     document.getElementById('sent-drop-row').appendChild(activeSentTile);
     checkSentenceFilled();
   } else {
-    activeSentTile.style.position='absolute';
-    activeSentTile.style.transform='rotate('+(Math.random()*20-10)+'deg)';
+    activeSentTile.style.position='relative';
+    activeSentTile.style.left='auto';
+    activeSentTile.style.top='auto';
+    activeSentTile.style.transform='none';
+
+    // Add wiggle animation visual feedback
+    const t = activeSentTile;
+    t.classList.add('wiggle-effect');
+    setTimeout(() => {
+      if(t) t.classList.remove('wiggle-effect');
+    }, 450);
+
+    // Both requested sentence staging elements ensure visibility
     document.getElementById('sent-staging').appendChild(activeSentTile);
   }
   activeSentTile=null;
@@ -1750,20 +1966,23 @@ function checkSentenceFilled(){
   const placed=Array.from(document.getElementById('sent-drop-row').querySelectorAll('.word-tile'));
   const inStaging=document.querySelectorAll('#sent-staging .word-tile').length;
   if(placed.length<s.words.length||inStaging>0)return;
-  const correct=placed.every((t,i)=>parseInt(t.dataset.oi)===i);
-  if(correct){document.getElementById('sent-status').innerText='';showSentenceSlider();}
-  else{sentWrongAttempts++;bounceSentenceTilesBack(placed,s);}
+  
+  // Goals 1 & 2: Disable Auto-Correct & Remove Automated Success
+  document.getElementById('sent-status').innerText='';
+  showSentenceSlider();
 }
 
 function bounceSentenceTilesBack(placed,s){
-  const stage=document.getElementById('sent-staging'); const aw=Math.max(stage.offsetWidth||600,300);
+  const stage=document.getElementById('sent-staging');
   placed.forEach((tile,i)=>{
     if(parseInt(tile.dataset.oi)!==i){
       tile.classList.add('bounce-back');
       setTimeout(()=>{
-        tile.classList.remove('bounce-back','placed'); tile.style.position='absolute';
-        tile.style.transform='rotate('+(Math.random()*20-10)+'deg)';
-        tile.style.left=Math.floor(Math.random()*(aw-90))+'px'; tile.style.top=Math.floor(Math.random()*80)+'px';
+        tile.classList.remove('bounce-back','placed');
+        tile.style.position='relative';
+        tile.style.left='auto';
+        tile.style.top='auto';
+        tile.style.transform='none';
         stage.appendChild(tile);
       },500);
     }
@@ -1829,6 +2048,7 @@ function fireSentZone(zone,s){
   });
 }
 function sentTeacherConfirm(){
+  celebStars(); // Goal 3: Visual sparkle on manual confirmation
   document.getElementById('sent-slider-wrap').style.opacity='0';
   document.getElementById('sent-status').innerText='';
   document.querySelectorAll('#sent-drop-row .word-tile').forEach(t=>{t.style.background='white';t.style.borderColor='#CBD5E0';t.style.transform='none';});
@@ -2100,14 +2320,13 @@ function csLoadTiles(){
   });
   const allPhon=getCsAllTiles();for(let i=allPhon.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[allPhon[i],allPhon[j]]=[allPhon[j],allPhon[i]];}
   setTimeout(()=>{
-    const tW=92,tH=92,padX=14,padY=12;const sw=Math.max(staging.offsetWidth||700,400);
-    const cols=Math.max(1,Math.floor((sw+padX)/(tW+padX)));const rows=Math.ceil(allPhon.length/cols);
-    staging.style.height=(rows*(tH+padY)+padY)+'px';
+    // Add Flex to the Staging wrapper
+    staging.style.display='flex';staging.style.flexWrap='wrap';staging.style.gap='15px';staging.style.justifyContent='center';staging.style.height='auto';
     allPhon.forEach((p,idx)=>{
       const tile=makeCsTile(p,getTileColors(p),-1,true,null,csStagingGrapheme(p));
-      tile.style.position='absolute';
-      tile.style.left=(padX+(idx%cols)*(tW+padX))+'px';
-      tile.style.top=(padY+Math.floor(idx/cols)*(tH+padY))+'px';
+      tile.style.position='relative';
+      tile.style.left='auto';
+      tile.style.top='auto';
       tile.style.transform='none';staging.appendChild(tile);
     });
   },80);
@@ -2122,19 +2341,36 @@ function makeCsTile(phoneme,colors,slot,draggable,word,displayOverride){
   if(draggable){tile.style.cursor='grab';tile.onpointerdown=csTilePointerDown;}
   return tile;
 }
+let cachedCsBoxes = [];
 function csTilePointerDown(e){
   e.preventDefault();csTileActive=e.currentTarget;
   const pf=getPhonemeAudioFile(csTileActive.dataset.phoneme);
   if(pf)playAudio(pf,csTileActive.dataset.phoneme,token,0.9);else tts(csTileActive.dataset.phoneme,0.9);
   csTileActive.setPointerCapture(e.pointerId);
   const r=csTileActive.getBoundingClientRect();csTileDragOff={x:e.clientX-r.left,y:e.clientY-r.top};
-  csTileActive.style.position='fixed';csTileActive.style.zIndex=2000;csTileActive.style.transform='scale(1.15)';csTileActive.style.cursor='grabbing';
+  const dl = document.getElementById('drag-layer'); dl.style.pointerEvents = 'auto'; dl.appendChild(csTileActive);
+  csTileActive.classList.add('dragging');
+  csTileActive.style.position='fixed';csTileActive.style.zIndex=9999;csTileActive.style.transform='scale(1.15)';csTileActive.style.cursor='grabbing';
+  csTileActive.style.transition='none !important';
   document.addEventListener('pointermove',csTilePointerMove);document.addEventListener('pointerup',csTilePointerUp);
+  
+  cachedCsBoxes = Array.from(document.querySelectorAll('#cs-tile-box-area [data-slot]')).map(b => ({ el: b, rect: b.getBoundingClientRect() }));
 }
-function csTilePointerMove(e){if(!csTileActive)return;csTileActive.style.left=(e.clientX-csTileDragOff.x)+'px';csTileActive.style.top=(e.clientY-csTileDragOff.y)+'px';}
+function csTilePointerMove(e) {
+  if(!csTileActive) return;
+  const pad = 10;
+  const maxX = window.innerWidth - csTileActive.offsetWidth - pad;
+  const maxY = window.innerHeight - csTileActive.offsetHeight - pad;
+  let x = e.clientX - csTileDragOff.x;
+  let y = e.clientY - csTileDragOff.y;
+  csTileActive.style.left = Math.max(pad, Math.min(x, maxX)) + 'px';
+  csTileActive.style.top = Math.max(pad, Math.min(y, maxY)) + 'px';
+}
 function csTilePointerUp(e){
   if(!csTileActive)return;
   document.removeEventListener('pointermove',csTilePointerMove);document.removeEventListener('pointerup',csTilePointerUp);
+  document.getElementById('drag-layer').style.pointerEvents = 'none';
+  csTileActive.classList.remove('dragging');
   csTileActive.releasePointerCapture(e.pointerId);
   const droppedPhoneme=csTileActive.dataset.phoneme;
   const entry=activeChain()[csIdx];
@@ -2146,7 +2382,8 @@ function csTilePointerUp(e){
   const status=document.getElementById('cs-tile-status');
   const changingBox=boxes.find(b=>b.dataset.changing==='1');
   let hitBox=null,hitDist=Infinity;
-  boxes.forEach(b=>{const r=b.getBoundingClientRect();const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);const dist=Math.sqrt(dx*dx+dy*dy);if(dist<120&&dist<hitDist){hitBox=b;hitDist=dist;}});
+  cachedCsBoxes.forEach(obj=>{const r=obj.rect;const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);const dist=Math.sqrt(dx*dx+dy*dy);if(dist<120&&dist<hitDist){hitBox=obj.el;hitDist=dist;}});
+  if(csTileActive) csTileActive.style.transition='';
   if(hitBox){
     const droppedSlot=parseInt(hitBox.dataset.slot);
     const changingSlot=changingBox?parseInt(changingBox.dataset.slot):-1;
@@ -2163,15 +2400,15 @@ function csTilePointerUp(e){
     } else {
       const phonemeIsWrong=droppedPhoneme!==correctPhoneme;if(phonemeIsWrong)csTryCount++;
       const wrongTile=csTileActive;csTileActive=null;
-      function returnToStaging(){wrongTile.style.position='absolute';wrongTile.style.outline='none';wrongTile.style.cursor='grab';wrongTile.style.zIndex='';wrongTile.style.left=Math.round(Math.random()*(Math.max(staging.offsetWidth||600,300)-92-12)+12)+'px';wrongTile.style.top=Math.round(Math.random()*50+10)+'px';wrongTile.style.transform='none';staging.appendChild(wrongTile);wrongTile.onpointerdown=csTilePointerDown;}
+      function returnToStaging(){wrongTile.style.position='relative';wrongTile.style.outline='none';wrongTile.style.cursor='grab';wrongTile.style.zIndex='';wrongTile.style.left='auto';wrongTile.style.top='auto';wrongTile.style.transform='none';staging.appendChild(wrongTile);wrongTile.onpointerdown=csTilePointerDown;}
       if(!phonemeIsWrong){returnToStaging();}
       else if(csTryCount>=2){wrongTile.style.outline='4px solid #FC8181';setTimeout(()=>{status.innerText='Ask your teacher for help with this one 💛';playAudio('prompt_ask.mp3','Ask your teacher for help.',token,0.9);document.getElementById('cs-tile-next-btn').style.display='block';returnToStaging();},400);}
       else{wrongTile.style.outline='4px solid #FC8181';tts('Try again',0.88);setTimeout(()=>{returnToStaging();status.innerText='';},600);}
       return;
     }
   }
-  csTileActive.style.position='absolute';csTileActive.style.transform='none';csTileActive.style.zIndex='';csTileActive.style.cursor='grab';
-  csTileActive.style.left=Math.round(Math.random()*(Math.max(staging.offsetWidth||600,300)-88))+'px';csTileActive.style.top=Math.round(Math.random()*60)+'px';
+  csTileActive.style.position='relative';csTileActive.style.transform='none';csTileActive.style.zIndex='';csTileActive.style.cursor='grab';
+  csTileActive.style.left='auto';csTileActive.style.top='auto';
   staging.appendChild(csTileActive);csTileActive=null;
 }
 function csTileNextWord(){csIdx++;if(csIdx>=activeChain().length)csDone();else csLoadStep();}
