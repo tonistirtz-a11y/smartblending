@@ -30,7 +30,17 @@ body {
 #intro-screen h1 { color:white; font-size:2.6rem; margin:0 0 24px; text-shadow:0 2px 8px rgba(0,0,0,.2); }
 #intro-screen p { color:rgba(255,255,255,.93); font-size:1.2rem; line-height:1.8; max-width:660px; background:rgba(255,255,255,.12); border-radius:20px; padding:22px 28px; margin:0 0 32px; }
 #intro-btn { background:white; color:#6B46C1; border:none; border-radius:30px; padding:16px 48px; font-size:1.3rem; font-weight:bold; cursor:pointer; box-shadow:0 6px 0 rgba(0,0,0,.15); transition:transform .1s,box-shadow .1s; font-family:inherit; }
-#intro-btn:active { transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.15); }
+#intro-btn:active { transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.15); }/* --- THE WIGGLE ANIMATION --- */
+@keyframes tileWiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(7deg); }
+  50% { transform: rotate(-7deg); }
+  75% { transform: rotate(7deg); }
+  100% { transform: rotate(0deg); }
+}
+.wiggle-effect {
+  animation: tileWiggle 0.4s ease-in-out;
+}
 
 #level-gate { position:fixed; inset:0; background:white; z-index:9999; display:none; flex-direction:column; align-items:center; padding:40px 20px; overflow-y:auto; }
 .level-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; width:100%; max-width:1050px; margin-top:20px; }
