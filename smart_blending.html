@@ -1379,6 +1379,7 @@ function getPhonemeAudioFile(phoneme){
   return map[phoneme]||null;
 }
 function handleTileDown(e){
+  if (e.cancelable) e.preventDefault(); 
   if(curStep!==1) return; stopAudio();
   activeTile=e.currentTarget; activeTile.setPointerCapture(e.pointerId);
   const pFile=getPhonemeAudioFile(activeTile.dataset.phoneme);
