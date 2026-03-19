@@ -1103,7 +1103,8 @@ async function setStep(step){
       await playAudio('prompt_step1_intro.mp3',"I am going to say the word very slowly. Listen carefully.",tok);
       if(tok!==token) return;
     } else if(advancedLevel){
-      await new Promise(r=>{tts('Listen carefully.',0.9);setTimeout(r,1200);});
+      // L9+: Use your recording instead of the computer voice
+      await playAudio('prompt_listencarefully.mp3', 'Listen carefully.', tok);
       if(tok!==token) return;
     } else {
       await playAudio('prompt_listencarefully.mp3','Listen carefully.',tok);
