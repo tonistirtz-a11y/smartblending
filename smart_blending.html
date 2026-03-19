@@ -1390,7 +1390,12 @@ function handleTileDown(e){
   activeTile.style.left=(e.clientX-dragOff.x)+'px'; activeTile.style.top=(e.clientY-dragOff.y)+'px';
   document.addEventListener('pointermove',tileMove); document.addEventListener('pointerup',tileUp);
 }
-function tileMove(e){ if(!activeTile)return; activeTile.style.left=(e.clientX-dragOff.x)+'px'; activeTile.style.top=(e.clientY-dragOff.y)+'px'; }
+function tileMove(e){ 
+  if (e.cancelable) e.preventDefault(); // The "Movement Lock"
+  if(!activeTile) return; 
+  activeTile.style.left=(e.clientX-dragOff.x)+'px'; 
+  activeTile.style.top=(e.clientY-dragOff.y)+'px'; 
+}
 function tileUp(e){
   if(!activeTile)return;
   activeTile.releasePointerCapture(e.pointerId);
