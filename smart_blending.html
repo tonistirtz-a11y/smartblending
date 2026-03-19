@@ -1390,11 +1390,21 @@ function handleTileDown(e){
   activeTile.style.left=(e.clientX-dragOff.x)+'px'; activeTile.style.top=(e.clientY-dragOff.y)+'px';
   document.addEventListener('pointermove',tileMove); document.addEventListener('pointerup',tileUp);
 }
-function tileMove(e){ 
-  if (e.cancelable) e.preventDefault(); // The "Movement Lock"
-  if(!activeTile) return; 
-  activeTile.style.left=(e.clientX-dragOff.x)+'px'; 
-  activeTile.style.top=(e.clientY-dragOff.y)+'px'; 
+function tileMove(e) {
+  if (e.cancelable) e.preventDefault();
+  if (!activeTile) return;
+  
+  // Calculate movement
+  let x = e.clientX - dragOff.x;
+  let y = e.clientY - dragOff.y;
+
+  // SCREEN GUARD: Keeps tile from disappearing off edges
+  const pad = 10;
+  const maxX = window.innerWidth - activeTile.offsetWidth - pad;
+  const maxY = window.innerHeight - activeTile.offsetHeight - pad;
+  
+  activeTile.style.left = Math.max(pad, Math.min(x, maxX)) + 'px';
+  activeTile.style.top = Math.max(pad, Math.min(y, maxY)) + 'px';
 }
 function tileUp(e){
   if(!activeTile)return;
