@@ -1955,11 +1955,18 @@ function csLoadStep(){
   document.getElementById('cs-tiles-panel').style.display='flex';
   document.getElementById('cs-write-panel').style.display='none';
   csLoadTiles();
-  setTimeout(()=>{
-    const fromWord=csIdx===0?entry.from:activeChain()[csIdx-1].to;
-    csCurrentInstruction='Change '+fromWord+' to '+entry.to;
-    tts((csIdx===0?'Listen carefully. ':'')+csCurrentInstruction,0.88);
-  },400);
+  setTimeout(async () => {
+    const fromWord = csIdx === 0 ? entry.from : activeChain()[csIdx-1].to;
+    
+    // 1. Play your recorded "Listen carefully" file first
+    if(csIdx === 0) {
+      await playAudio('prompt_listencarefully.mp3', 'Listen carefully.', token);
+    }
+    
+    // 2. Give the oral direction for the word change
+    csCurrentInstruction = `Change ${fromWord} to ${entry.to}`;
+    tts(csCurrentInstruction, 0.88);
+  }, 400);
 }
 function csRepeatInstruction(){if(csCurrentInstruction)tts(csCurrentInstruction,0.88);}
 
