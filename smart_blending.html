@@ -1417,7 +1417,16 @@ function tileUp(e){
     const r=box.getBoundingClientRect(); const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
     if(Math.sqrt(dx*dx+dy*dy)<85){ box.appendChild(activeTile); box.classList.add('filled'); activeTile.classList.remove('dragging'); activeTile.style.position='static'; activeTile.style.transform='none'; dropped=true; checkFilled(); break; }
   }
-  if(!dropped){ document.getElementById('staging-area').appendChild(activeTile); activeTile.classList.remove('dragging'); activeTile.style.position='absolute'; }
+ if (!dropped) {
+    const staging = document.getElementById('staging-area');
+    staging.appendChild(activeTile);
+    // This resets the tile so it finds a neat empty spot in the row
+    activeTile.classList.remove('dragging');
+    activeTile.style.position = 'relative'; 
+    activeTile.style.left = 'auto';         
+    activeTile.style.top = 'auto';          
+    activeTile.style.transform = 'none';
+  }
   activeTile=null;
 }
 function checkFilled(){
