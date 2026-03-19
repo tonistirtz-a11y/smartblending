@@ -68,7 +68,21 @@ header { padding:0.5rem 1rem; display:flex; justify-content:space-between; align
 .main-workspace { flex-grow:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:0.5rem; position:relative; }
 
 #blending-view { width:100%; display:none; flex-direction:column; align-items:center; }
-#staging-area { position:relative; width:100%; max-width:600px; height:210px; margin-bottom:10px; transition:opacity .5s; }
+#staging-area { 
+  position: relative; 
+  width: 100%; 
+  max-width: 600px; 
+  min-height: 120px; 
+  margin: 10px auto; 
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: center; 
+  align-items: center;
+  gap: 15px; 
+  padding: 15px;
+  background: rgba(0,0,0,0.02);
+  border-radius: 20px;
+}
 #box-area { display:flex; gap:15px; justify-content:center; padding:10px; transition:gap .05s linear; }
 .box { width:110px; height:110px; border:4px dashed #CBD5E0; border-radius:24px; background:rgba(255,255,255,.4); display:flex; justify-content:center; align-items:center; position:relative; transition:transform .2s,box-shadow .2s; }
 .box.filled { border-style:solid; background:white; border-color:white; box-shadow:0 4px 10px rgba(0,0,0,.05); }
