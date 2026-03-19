@@ -73,7 +73,7 @@ header { padding:0.5rem 1rem; display:flex; justify-content:space-between; align
 .box { width:110px; height:110px; border:4px dashed #CBD5E0; border-radius:24px; background:rgba(255,255,255,.4); display:flex; justify-content:center; align-items:center; position:relative; transition:transform .2s,box-shadow .2s; }
 .box.filled { border-style:solid; background:white; border-color:white; box-shadow:0 4px 10px rgba(0,0,0,.05); }
 .box.glow { box-shadow:0 0 40px #ECC94B; border-color:#ECC94B; transform:scale(1.05); background:white; z-index:10; }
-.tile { width:95px; height:95px; border-radius:20px; display:flex; justify-content:center; align-items:center; font-size:3.5rem; font-weight:bold; cursor:grab; box-shadow:0 6px 0 rgba(0,0,0,.1); user-select:none; background:white; color:#2D3748; border:1px solid #EDF2F7; position:absolute; }
+.tile { width:95px; height:95px; border-radius:20px; display:flex; justify-content:center; align-items:center; font-size:3.5rem; font-weight:bold; cursor:grab; box-shadow:0 6px 0 rgba(0,0,0,.1); user-select:none; background:white; color:#2D3748; border:1px solid #EDF2F7; position:absolute; touch-action:none; -webkit-user-select:none; }
 .tile.dragging { transform:scale(1.15)!important; opacity:.9; z-index:1000; cursor:grabbing; position:fixed!important; }
 .tile.bounce { animation: tileBounce 0.5s ease; }
 @keyframes tileBounce { 0%{transform:rotate(0deg) scale(1);} 20%{transform:rotate(-15deg) scale(1.15);} 40%{transform:rotate(12deg) scale(1.1);} 60%{transform:rotate(-8deg) scale(1.05);} 80%{transform:rotate(5deg) scale(1.02);} 100%{transform:rotate(0deg) scale(1);} }
