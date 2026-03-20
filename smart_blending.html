@@ -391,6 +391,12 @@ function teacherJump(dest){
     document.body.style.backgroundImage="url('float.jpg')";
     curLevel=Math.max(2, curLevel);
     document.getElementById('level-gate').style.display='none';
+    document.getElementById('app-header').style.visibility='visible';
+    document.getElementById('step-toolbar').style.display='none'; // Hide toolbar for sentence view
+    document.getElementById('sentence-view').style.display='flex';
+    const wc=document.getElementById('word-counter'); wc.innerText=''; wc.style.background='transparent'; wc.style.boxShadow='none';
+    const si=document.getElementById('step-indicator'); si.innerText=''; si.style.background='transparent'; si.style.boxShadow='none';
+    const sd=document.getElementById('step-direction'); sd.innerText=''; sd.style.background='transparent'; sd.style.boxShadow='none';
     startSentenceLevel(curLevel);
   }
 }
@@ -548,7 +554,6 @@ function teacherJump(dest){
     <div id="cs-tile-box-area" style="display:flex;gap:15px;justify-content:center;padding:10px 0;"></div>
     <div id="cs-tile-status" style="font-size:1.1rem;color:#553C9A;font-weight:bold;min-height:28px;text-align:center;padding:2px;"></div>
     <button id="cs-hear-word-btn" onclick="csHearWord()" style="display:none;background:linear-gradient(135deg,#2B6CB0,#4299E1);color:white;border:none;border-radius:20px;padding:12px 32px;font-size:1.05rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 5px 0 #1A4A8A;margin-bottom:4px;">🔊 Hear Word</button>
-    <button id="cs-tile-next-btn" onclick="csTileNextWord()" style="display:none;background:#48BB78;color:white;border:none;border-radius:20px;padding:14px 40px;font-size:1.15rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 6px 0 #276749;">Next Word ▶</button>
   </div>
 
   <div id="cs-write-panel" style="display:none;flex-direction:column;align-items:center;width:100%;max-width:1100px;gap:0;padding:0 16px 16px;">
@@ -1145,7 +1150,6 @@ function parseWordToPhonemes(word){
   const units=['tch','sh','ch','wh','ck','ng','qu','ss','ll','ff','zz','dd','gg','nn','pp','bb','tt','rr','mm','th','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
   const phonemeMap={'tch':'tch','sh':'sh','ch':'ch','wh':'wh','ck':'k','ng':'ng','qu':'kw','ss':'s','ll':'l','ff':'f','zz':'z','dd':'d','gg':'g','nn':'n','pp':'p','bb':'b','tt':'t','rr':'r','mm':'m','th':'th_u','a':'a','e':'e','i':'i','o':'o','u':'u','b':'b','c':'k','d':'d','f':'f','g':'g','h':'h','j':'j','k':'k','l':'l','m':'m','n':'n','p':'p','q':'k','r':'r','s':'s','t':'t','v':'v','w':'w','x':'ks','y':'y','z':'z'};
   const graphemeMap={'tch':'tch','sh':'sh','ch':'ch','wh':'wh','ck':'ck','ng':'ng','qu':'qu','ss':'ss','ll':'ll','ff':'ff','zz':'zz','dd':'dd','gg':'gg','nn':'nn','pp':'pp','bb':'bb','tt':'tt','rr':'rr','mm':'mm','th':'th','a':'a','e':'e','i':'i','o':'o','u':'u','b':'b','c':'c','d':'d','f':'f','g':'g','h':'h','j':'j','k':'k','l':'l','m':'m','n':'n','p':'p','q':'q','r':'r','s':'s','t':'t','v':'v','w':'w','x':'x','y':'y','z':'z'};
-  const phonemes=[],graphemes=[];
   let i=0;
   while(i<w.length){
     let matched=false;
@@ -1292,7 +1296,9 @@ function exitToLevels(){
 function loadWord(){
   const wordBank=sessionWordList||LEVELS[curLevel].words;
   const wo=wordBank[curWordIdx];
-  document.getElementById('word-counter').innerText='Word '+(curWordIdx+1)+' of '+wordBank.length;
+  const wc=document.getElementById('word-counter'); wc.innerText='Word '+(curWordIdx+1)+' of '+wordBank.length; wc.style.background='white'; wc.style.boxShadow='';
+  const si=document.getElementById('step-indicator'); si.style.background='white'; si.style.boxShadow='0 4px 12px rgba(0,0,0,.06)';
+  const sd=document.getElementById('step-direction'); sd.style.background='rgba(255,255,255,0.85)'; sd.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';
   document.getElementById('ref-word').innerText=wo.word;
   document.getElementById('staging-area').innerHTML='';
   document.getElementById('box-area').innerHTML='';
@@ -1471,6 +1477,7 @@ function showSessionSummary(){
   document.getElementById('step-toolbar').style.display='none';
   document.getElementById('blending-view').style.display='none';
   document.getElementById('writing-view').style.display='none';
+  document.getElementById('sentence-view').style.display='none';
   const wordBank=sessionWordList||LEVELS[curLevel].words;
   const meta=LEVEL_META[curLevel]||{};
   const now=new Date();
@@ -1937,6 +1944,7 @@ function sentTileUp(e){
   if(!activeSentTile)return;
   document.removeEventListener('pointermove',sentTileMove); document.removeEventListener('pointerup',sentTileUp);
   document.getElementById('drag-layer').style.pointerEvents = 'none';
+  activeSentTile.classList.remove('dragging');
   activeSentTile.releasePointerCapture(e.pointerId);
   document.getElementById('sent-drop-row').classList.remove('drag-over');
   const rr=cachedSentWrapRect || document.getElementById('sent-drop-wrap').getBoundingClientRect();
@@ -2039,9 +2047,20 @@ function sentSliderUp(e){
   if(!sentSliding)return; sentSliding=false;
   const thumb=document.getElementById('sent-thumb'); thumb.releasePointerCapture(e.pointerId);
   thumb.onpointermove=null; thumb.onpointerup=null; thumb.onpointercancel=null;
+  
+  const rail=document.getElementById('sent-rail-bg'); 
+  const rr=rail.getBoundingClientRect();
+  const clamped=parseInt(thumb.style.left||'0');
+  const progress=rr&&rr.width?clamped/rr.width:0;
+  
   thumb.style.transition='left .3s ease'; thumb.style.left='0px';
   document.getElementById('sent-rail-fill').style.width='0'; sentLastZone=-1;
-  document.getElementById('sent-confirm-btn').style.display='block';
+
+  if (progress > 0.85) {
+    document.getElementById('sent-slider-wrap').style.opacity='0';
+    document.querySelectorAll('#sent-drop-row .word-tile').forEach(t=>{t.style.background='white';t.style.borderColor='#CBD5E0';t.style.transform='none';});
+    setTimeout(() => { showIllustration(); }, 300);
+  }
 }
 function fireSentZone(zone,s){
   s.words.forEach((_,i)=>{const pill=document.getElementById('sent-pill-'+i);if(pill)pill.style.opacity=i<=zone?'1':'0.25';});
@@ -2152,7 +2171,7 @@ const CS_WORDS_4=[{from:"did",to:"din",changePos:2},{from:"din",to:"bin",changeP
 const CS_PHONEMES_4={did:["d","i","d"],din:["d","i","n"],bin:["b","i","n"],ban:["b","a","n"],tan:["t","a","n"],tab:["t","a","b"],cab:["k","a","b"],cob:["k","o","b"],cot:["k","o","t"],bot:["b","o","t"],bet:["b","e","t"]};
 const CS_GRAPHEMES_4={cab:["c","a","b"],cob:["c","o","b"],cot:["c","o","t"]};
 const CS_WORDS_5=[{from:"ran",to:"run",changePos:1},{from:"run",to:"bun",changePos:0},{from:"bun",to:"pun",changePos:0},{from:"pun",to:"pin",changePos:1},{from:"pin",to:"pig",changePos:2},{from:"pig",to:"pug",changePos:1},{from:"pug",to:"pub",changePos:2},{from:"pub",to:"cub",changePos:0},{from:"cub",to:"tub",changePos:0},{from:"tub",to:"tab",changePos:1},{from:"tab",to:"dab",changePos:0}];
-const CS_PHONEMES_5={ran:["r","a","n"],run:["r","u","n"],bun:["b","u","n"],pun:["p","u","n"],pin:["p","i","n"],pig:["p","i","g"],pug:["p","u","g"],pub:["p","u","b"],cub:["k","u","b"],tub:["t","u","b"],tab:["t","a","b"],dab:["d","a","b"]};
+const CS_PHONEMES_5={ran:["r","a","n"],run:["r","u","n"],bun:["b","u","n"],pun:["p","u","n"],pin:["p","i","n"],pig:["p","i","g"],pug:["p","i","g"],pub:["p","u","b"],cub:["k","u","b"],tub:["t","u","b"],tab:["t","a","b"],dab:["d","a","b"]};
 const CS_GRAPHEMES_5={cub:["c","u","b"]};
 const CS_WORDS_6=[{from:"wag",to:"wig",changePos:1},{from:"wig",to:"jig",changePos:0},{from:"jig",to:"jug",changePos:1},{from:"jug",to:"bug",changePos:0},{from:"bug",to:"bum",changePos:2},{from:"bum",to:"bam",changePos:1},{from:"bam",to:"jam",changePos:0},{from:"jam",to:"ham",changePos:0},{from:"ham",to:"him",changePos:1},{from:"him",to:"hum",changePos:1}];
 const CS_PHONEMES_6={wag:["w","a","g"],wig:["w","i","g"],jig:["j","i","g"],jug:["j","u","g"],bug:["b","u","g"],bum:["b","u","m"],bam:["b","a","m"],jam:["j","a","m"],ham:["h","a","m"],him:["h","i","m"],hum:["h","u","m"]};
@@ -2268,9 +2287,10 @@ function startCsActivity(mode){
   document.getElementById('cs-header').style.display='flex';
   document.getElementById('cs-done-screen').style.display='none';
   document.getElementById('cs-mode-badge').innerText=mode==='tiles'?'Drag Tiles':'Write It';
-  document.getElementById('step-indicator').innerText='Activity 2: Change the Sound';
+  const si=document.getElementById('step-indicator'); si.innerText=''; si.style.background='transparent'; si.style.boxShadow='none';
+  const sd=document.getElementById('step-direction'); sd.innerText=''; sd.style.background='transparent'; sd.style.boxShadow='none';
   const pal=document.getElementById('cs-palette');pal.innerHTML='';
-  CS_COLORS.forEach(c=>{const btn=document.createElement('div');btn.className='cs-color-dot'+(c===csPenColor?' active':'');btn.style.background=c;btn.onclick=()=>{csPenColor=c;csTool='pen';csUpdateWriteUI();};pal.appendChild(btn);});
+  CS_COLORS.forEach(c=>{const btn=document.createElement('div');btn.className='cs-color-dot'+(c===csPenColor?' active':'');btn.style.cssText='width:36px;height:36px;border-radius:50%;background:'+c+';border:3px solid white;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.12);';btn.onclick=()=>{csPenColor=c;csTool='pen';csUpdateWriteUI();};pal.appendChild(btn);});
   csLoadStep();
 }
 
@@ -2278,23 +2298,18 @@ function csLoadStep(){
   if(csMode==='write'){document.getElementById('cs-tiles-panel').style.display='none';document.getElementById('cs-write-panel').style.display='flex';csLoadWrite();return;}
   const entry=activeChain()[csIdx];
   document.getElementById('cs-word-counter').innerText='Word '+(csIdx+1)+' of '+activeChain().length;
-  document.getElementById('word-counter').innerText='Change the Sound — Drag Tiles';
+  const wc=document.getElementById('word-counter'); wc.innerText=''; wc.style.background='transparent'; wc.style.boxShadow='none';
   document.getElementById('cs-hint-word-header').innerText=entry.to;
   document.getElementById('cs-tiles-panel').style.display='flex';
   document.getElementById('cs-write-panel').style.display='none';
   csLoadTiles();
-  setTimeout(async () => {
-    const fromWord = csIdx === 0 ? entry.from : activeChain()[csIdx-1].to;
-    
-    // 1. Play your recorded "Listen carefully" file first
-    if(csIdx === 0) {
-      await playAudio('prompt_listencarefully.mp3', 'Listen carefully.', token);
-    }
-    
-    // 2. Give the oral direction for the word change
-    csCurrentInstruction = `Change ${fromWord} to ${entry.to}`;
-    tts(csCurrentInstruction, 0.88);
-  }, 400);
+  const fromWord = csIdx === 0 ? entry.from : activeChain()[csIdx-1].to;
+  csCurrentInstruction = csIdx === 0 
+      ? `Listen carefully. Change ${fromWord} to ${entry.to}`
+      : `Change ${fromWord} to ${entry.to}`;
+  
+  // Fire TTS synchronously without timeouts to bypass strict iOS audio-blocking policies natively!
+  tts(csCurrentInstruction, 0.88);
 }
 function csRepeatInstruction(){if(csCurrentInstruction)tts(csCurrentInstruction,0.88);}
 
@@ -2310,7 +2325,6 @@ function csLoadTiles(){
   const boxArea=document.getElementById('cs-tile-box-area');
   const status=document.getElementById('cs-tile-status');
   staging.innerHTML='';boxArea.innerHTML='';status.innerText='';
-  document.getElementById('cs-tile-next-btn').style.display='none';
   document.getElementById('cs-hear-word-btn').style.display='none';
   const instr=document.getElementById('cs-tile-instruction');
  
@@ -2400,14 +2414,15 @@ function csTilePointerUp(e){
       changingBox.classList.add('filled');
       const pf=getPhonemeAudioFile(droppedPhoneme);if(pf)playAudio(pf,droppedPhoneme,token,0.85);else tts(droppedPhoneme,0.85);
       csTileActive=null;setTimeout(()=>csPlayPraise(),700);maybeCelebrate();
-      setTimeout(()=>{status.innerText='✅ '+entry.to+'! Say the sounds and read the word.';document.getElementById('cs-hear-word-btn').style.display='inline-flex';document.getElementById('cs-tile-next-btn').style.display='block';},300);
+      setTimeout(()=>{status.innerText='✅ '+entry.to+'! Say the sounds and read the word.';document.getElementById('cs-hear-word-btn').style.display='inline-flex';},300);
+      setTimeout(()=>{status.innerText='';document.getElementById('cs-hear-word-btn').style.display='none';csTileNextWord();},3500);
       return;
     } else {
       const phonemeIsWrong=droppedPhoneme!==correctPhoneme;if(phonemeIsWrong)csTryCount++;
       const wrongTile=csTileActive;csTileActive=null;
       function returnToStaging(){wrongTile.style.position='relative';wrongTile.style.outline='none';wrongTile.style.cursor='grab';wrongTile.style.zIndex='';wrongTile.style.left='auto';wrongTile.style.top='auto';wrongTile.style.transform='none';staging.appendChild(wrongTile);wrongTile.onpointerdown=csTilePointerDown;}
       if(!phonemeIsWrong){returnToStaging();}
-      else if(csTryCount>=2){wrongTile.style.outline='4px solid #FC8181';setTimeout(()=>{status.innerText='Ask your teacher for help with this one 💛';playAudio('prompt_ask.mp3','Ask your teacher for help.',token,0.9);document.getElementById('cs-tile-next-btn').style.display='block';returnToStaging();},400);}
+      else if(csTryCount>=2){wrongTile.style.outline='4px solid #FC8181';setTimeout(()=>{status.innerText='Ask your teacher for help with this one 💛';playAudio('prompt_ask.mp3','Ask your teacher for help.',token,0.9);returnToStaging();},400);setTimeout(()=>{status.innerText='';csTileNextWord();},5000);}
       else{wrongTile.style.outline='4px solid #FC8181';tts('Try again',0.88);setTimeout(()=>{returnToStaging();status.innerText='';},600);}
       return;
     }
@@ -2424,13 +2439,13 @@ function csLoadWrite(){
   const dots=document.getElementById('cs-progress-dots');if(dots){dots.innerHTML='';activeWriteSeq().forEach((_,i)=>{const d=document.createElement('div');d.id='cs-dot-'+i;d.style.cssText='width:12px;height:12px;border-radius:50%;background:#CBD5E1;transition:background .3s;';dots.appendChild(d);});}
   const pal=document.getElementById('cs-palette');if(pal){pal.innerHTML='';CS_COLORS.forEach(c=>{const btn=document.createElement('div');btn.className='cs-color-dot'+(c===csPenColor?' active':'');btn.style.cssText='width:36px;height:36px;border-radius:50%;background:'+c+';border:3px solid white;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.12);';btn.onclick=()=>{csPenColor=c;csTool='pen';csUpdateWriteUI();};pal.appendChild(btn);});}
   setTimeout(()=>{const canvas=document.getElementById('cs-canvas');const wrap=canvas.parentElement;canvas.width=wrap.offsetWidth||1200;canvas.height=wrap.offsetHeight||600;csCtx=canvas.getContext('2d');csCtx.lineCap='round';csCtx.lineJoin='round';csCtx.clearRect(0,0,canvas.width,canvas.height);canvas.onpointerdown=csPointerDown;canvas.onpointermove=csPointerMove;canvas.onpointerup=csPointerUp;canvas.onpointercancel=csPointerUp;},60);
-  csWriteUpdateUI();setTimeout(()=>csPlayInstruction(),600);
+  csWriteUpdateUI();csPlayInstruction();
 }
 function csWriteUpdateUI(){
   activeWriteSeq().forEach((_,i)=>{const d=document.getElementById('cs-dot-'+i);if(d)d.style.background=i<csWriteStep?'#48BB78':'#CBD5E1';});
   const hw=document.getElementById('cs-hint-word');if(hw)hw.innerText=activeWriteSeq()[csWriteStep-1]||'';
   document.getElementById('cs-word-counter').innerText='Word '+csWriteStep+' of '+activeWriteSeq().length;
-  document.getElementById('word-counter').innerText='Change the Sound — Write It';
+  const wc=document.getElementById('word-counter'); wc.innerText=''; wc.style.background='transparent'; wc.style.boxShadow='none';
 }
 function csPlayInstruction(){
   const word=activeWriteSeq()[csWriteStep-1];const prevWord=csWriteStep>1?activeWriteSeq()[csWriteStep-2]:null;
@@ -2454,7 +2469,7 @@ function csPointerMove(e){if(!csDrawing)return;const canvas=document.getElementB
 function csPointerUp(e){csDrawing=false;try{document.getElementById('cs-canvas').releasePointerCapture(e.pointerId);}catch(err){}}
 function csGetPos(e,canvas){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*(canvas.width/r.width),y:(e.clientY-r.top)*(canvas.height/r.height)};}
 function csWriteNextWord(){
-  if(csWriteStep<activeWriteSeq().length){csWriteStep++;csSpellingVisible=false;csTool='pen';csUpdateWriteUI();csWriteUpdateUI();setTimeout(()=>csPlayInstruction(),600);}
+  if(csWriteStep<activeWriteSeq().length){csWriteStep++;csSpellingVisible=false;csTool='pen';csUpdateWriteUI();csWriteUpdateUI();csPlayInstruction();}
   else csDone();
 }
 function csDone(){
