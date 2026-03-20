@@ -2295,10 +2295,9 @@ function sentNextSentence(){
   if(sentIdx>=activeSentences().length){
     document.getElementById('sentence-view').style.display='none';
     document.getElementById('app-header').style.visibility='hidden';
-    document.getElementById('activity-picker').style.display='flex';
     tts("Great Job making and reading sentences. Now choose one of the sentences and write it with your teacher. Remember to say the sounds as you write and to correct any misspelled words.", 0.88);
     celebrateLevelComplete();
-    setTimeout(()=>showSessionSummary(),1800);
+    setTimeout(()=>showSessionSummary(), 8500);
   } else {
     document.getElementById('illus-wrap').style.display='none';
     document.getElementById('sent-next-btn').style.display='none';
