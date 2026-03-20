@@ -416,24 +416,24 @@ function teacherJump(dest){
 
 <canvas id="celebration-canvas"></canvas>
 
-<div id="session-summary" style="display:none;position:fixed;inset:0;z-index:9990;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;gap:20px;text-align:center;">
+<div id="session-summary" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:9990;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;padding-bottom:calc(40px + env(safe-area-inset-bottom));gap:20px;text-align:center;overflow-y:auto;max-height:100dvh;">
   <div style="font-size:4rem;">🏆</div>
   <h2 style="color:white;font-size:2.2rem;margin:0;text-shadow:0 2px 8px rgba(0,0,0,.2);">Session Complete!</h2>
-  <div style="background:rgba(255,255,255,.15);border-radius:20px;padding:24px 36px;display:flex;flex-direction:column;gap:12px;min-width:280px;">
+  <div id="sum-credentials" style="font-size:0.85rem; color: rgba(255,255,255,0.7); margin-top:-10px; margin-bottom:5px; font-weight:500;"></div>
+  <div style="background:rgba(255,255,255,.15);border-radius:20px;padding:24px 36px;display:flex;flex-direction:column;gap:12px;min-width:280px;max-width:400px;">
     <div style="color:white;font-size:1.1rem;font-weight:700;" id="sum-level"></div>
     <div style="color:white;font-size:1.1rem;font-weight:700;" id="sum-words"></div>
     <div id="sum-word-detail" style="font-size:0.85rem;color:rgba(255,255,255,.85);text-align:left;margin-top:4px;line-height:1.7;"></div>
     <div style="color:rgba(255,255,255,.8);font-size:0.95rem;" id="sum-date"></div>
   </div>
-  <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
+  
+  <div id="sum-resources-container" style="display:none;flex-direction:column;gap:10px;width:100%;max-width:380px;margin-top:8px;"></div>
+  
+  <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:4px;">
     <button onclick="printSummary()" style="background:rgba(255,255,255,.2);color:white;border:2px solid rgba(255,255,255,.5);border-radius:20px;padding:12px 28px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;">🖨 Print</button>
     <button onclick="newSessionFromSummary()" style="background:#48BB78;color:white;border:none;border-radius:20px;padding:12px 28px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 5px 0 #276749;">New Session ▶</button>
   </div>
-  <div style="background:rgba(255,255,255,.12);border-radius:16px;padding:16px 24px;max-width:380px;margin-top:4px;">
-    <div style="color:rgba(255,255,255,.9);font-size:0.9rem;font-weight:700;margin-bottom:6px;">📚 Want more practice?</div>
-    <div style="color:rgba(255,255,255,.75);font-size:0.82rem;line-height:1.5;">Companion worksheets and home practice sheets for this level are available at Smart and Special Teaching.</div>
-    <a href="https://www.smartandspecialteaching.com" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:10px;color:#F6E05E;font-size:0.85rem;font-weight:bold;text-decoration:underline;">Visit Smart and Special Teaching →</a>
-  </div>
+  <a id="sum-global-bundle" href="#" target="_blank" style="color:white; text-decoration:underline; font-size:0.9rem; margin-top:14px; opacity:0.9;"></a>
 </div>
 
 <div id="level-gate" style="display:none;">
@@ -687,6 +687,45 @@ function teacherJump(dest){
 </div>
 
 <script>
+const RESOURCE_MAP = {
+  credentials: "Created by a Dyslexia Therapist | Research-Supported Methods",
+  globalBundle: {
+    name: "Science of Reading Phonics & Decodable Bundle",
+    url: "https://www.teacherspayteachers.com/Product/First-Grade-Decodable-Phonics-Reading-Passages-Science-of-Reading-Aligned-RTI-3625569"
+  },
+  units: {
+    "1-6": {
+      name: "Short Vowels (CVC)",
+      amazon: "https://www.amazon.com/dp/1967186200",
+      tpt: "https://www.teacherspayteachers.com/Product/CVC-Decodable-Readers-Kindergarten-Science-of-Reading-Curriculum-3054795",
+      kindle: "https://www.amazon.com/dp/B0FGK6DD4Q"
+    },
+    "7": {
+      name: "Double Consonants (Floss Rule)",
+      amazon: "https://www.amazon.com/dp/1967186227",
+      tpt: "https://www.teacherspayteachers.com/Product/Floss-Rule-Decodable-Stories-with-Comprehension-Questions-Level-1-Unit-4-1st-2901251",
+      kindle: "https://www.amazon.com/dp/B0FJ8YWMM5"
+    },
+    "8-10": {
+      name: "Consonant Blends",
+      amazon: "https://www.amazon.com/dp/1967186219",
+      tpt: "https://www.teacherspayteachers.com/Product/Blends-Decodable-Passages-Lessons-Level-1-Unit-8-1st-Grade-3478456",
+      kindle: "https://www.amazon.com/dp/B0FHJ885MC"
+    },
+    "11-17": {
+      name: "Digraphs (sh, ch, th, ck, qu)",
+      amazon: "https://www.amazon.com/dp/1967186189",
+      tpt: "https://www.teacherspayteachers.com/Product/Digraph-Decodable-Passages-with-Comprehension-Questions-1st-Grade-RTI-2870836",
+      kindle: "https://www.amazon.com/dp/B0FGKHWY82"
+    },
+    "18": {
+      name: "Complex Word Endings",
+      amazon: "https://www.amazon.com/dp/1967186227",
+      kindle: "https://www.amazon.com/dp/B0FJ8YWMM5"
+    }
+  }
+};
+
 // ── AUDIO BASE — full GitHub raw URL so audio works from any iframe or host ──
 const AUDIO_BASE = 'https://raw.githubusercontent.com/tonistirtz-a11y/smartblending/main/';
 
@@ -1472,7 +1511,7 @@ function resetTimer(){ clearInterval(timerInterval);timerRunning=false;timerSeco
 
 // ── Session summary ──
 function showSessionSummary(){
-  stopAudio(); token++;
+  token++;
   document.getElementById('app-header').style.visibility='hidden';
   document.getElementById('step-toolbar').style.display='none';
   document.getElementById('blending-view').style.display='none';
@@ -1503,6 +1542,32 @@ function showSessionSummary(){
     localStorage.setItem('sb_last_level',curLevel);
   }catch(e){}
   resetTimer(); sessionLog=[];
+  
+  // Marketing Brain Conversion Engine logic
+  document.getElementById('sum-credentials').innerText = RESOURCE_MAP.credentials;
+  let unitKey = null;
+  if(curLevel >= 1 && curLevel <= 6) unitKey = "1-6";
+  else if(curLevel === 7) unitKey = "7";
+  else if(curLevel >= 8 && curLevel <= 10) unitKey = "8-10";
+  else if(curLevel >= 11 && curLevel <= 17) unitKey = "11-17";
+  else if(curLevel >= 18) unitKey = "18";
+  
+  const rc = document.getElementById('sum-resources-container');
+  if(unitKey && RESOURCE_MAP.units[unitKey]) {
+    const u = RESOURCE_MAP.units[unitKey];
+    let html = `<div style="color:rgba(255,255,255,.9);font-size:0.95rem;font-weight:bold;margin-bottom:2px;text-align:left;">📚 Get the companion materials for this level (${u.name}):</div>`;
+    if(u.amazon) html += `<a href="${u.amazon}" target="_blank" style="display:flex;flex-direction:column;background:#FF9900;color:black;text-decoration:none;border-radius:12px;padding:14px 16px;box-shadow:0 4px 10px rgba(0,0,0,0.2);"><span style="font-weight:900;font-size:1.1rem;text-align:left;">Amazon Paperback Workbook</span><span style="font-size:0.85rem;font-weight:600;opacity:0.85;text-align:left;margin-top:2px;">Best for building permanent muscle memory.</span></a>`;
+    if(u.tpt) html += `<a href="${u.tpt}" target="_blank" style="display:flex;flex-direction:column;background:#BA0100;color:white;text-decoration:none;border-radius:12px;padding:14px 16px;box-shadow:0 4px 10px rgba(0,0,0,0.2);"><span style="font-weight:900;font-size:1.1rem;text-align:left;">TPT Stories/Passages</span><span style="font-size:0.85rem;font-weight:500;opacity:0.9;text-align:left;margin-top:2px;">Instant download for classroom or home use.</span></a>`;
+    if(u.kindle) html += `<a href="${u.kindle}" target="_blank" style="display:flex;flex-direction:column;background:#00A8E1;color:white;text-decoration:none;border-radius:12px;padding:14px 16px;box-shadow:0 4px 10px rgba(0,0,0,0.2);"><span style="font-weight:900;font-size:1.1rem;text-align:left;">Kindle Storybook</span><span style="font-size:0.85rem;font-weight:500;opacity:0.9;text-align:left;margin-top:2px;">Instant digital access on this tablet.</span></a>`;
+    rc.innerHTML = html;
+    rc.style.display = 'flex';
+  } else {
+    rc.style.display = 'none';
+  }
+  const gb = document.getElementById('sum-global-bundle');
+  gb.innerText = RESOURCE_MAP.globalBundle.name;
+  gb.href = RESOURCE_MAP.globalBundle.url;
+  
   document.getElementById('session-summary').style.display='flex';
   sessionWordList=null;
 }
@@ -2126,6 +2191,7 @@ function initScratch(){
 }
 function doScratch(e){
   const canvas=document.getElementById('illus-canvas-overlay');
+  if(canvas.style.display==='none')return;
   const r=canvas.getBoundingClientRect();
   const x=(e.clientX-r.left)*(canvas.width/r.width); const y=(e.clientY-r.top)*(canvas.height/r.height);
   scratchCtx.globalCompositeOperation='destination-out';
@@ -2136,6 +2202,7 @@ function doScratch(e){
 function checkScratchReveal(){
   if(scratchRevealPct>=50){
     const canvas=document.getElementById('illus-canvas-overlay');
+    if(canvas.style.display==='none')return;
     canvas.style.transition='opacity .4s'; canvas.style.opacity='0';
     setTimeout(()=>{canvas.style.display='none';document.getElementById('sent-next-btn').style.display='block';},400);
   }
@@ -2147,7 +2214,7 @@ function sentNextSentence(){
     document.getElementById('sentence-view').style.display='none';
     document.getElementById('app-header').style.visibility='hidden';
     document.getElementById('activity-picker').style.display='flex';
-    playAudio('prompt_sent_complete.mp3','Amazing work! You built every sentence!',token,0.9);
+    tts("Great Job making and reading sentences. Now choose one of the sentences and write it with your teacher. Remember to say the sounds as you write and to correct any misspelled words.", 0.88);
     celebrateLevelComplete();
     setTimeout(()=>showSessionSummary(),1800);
   } else {
