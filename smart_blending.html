@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+<script>
+window.onerror = function(m, u, l, c, e) {
+  var b = document.createElement('div');
+  b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999999;background:red;color:white;padding:20px;font-size:18px;font-family:sans-serif;box-shadow:0 5px 20px rgba(0,0,0,0.5);white-space:pre-wrap;word-break:break-all;max-height:50vh;overflow-y:auto;';
+  b.innerHTML = "<b>JS CRASH CAUGHT!</b><br><br>Error: " + m + "<br>Line: " + l + " Col: " + c;
+  if (document.body) { document.body.appendChild(b); } else { window.addEventListener('DOMContentLoaded', ()=>document.body.appendChild(b)); }
+  return false;
+};
+</script>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
