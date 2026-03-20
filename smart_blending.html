@@ -447,9 +447,9 @@ function teacherJump(dest){
   </div>
   <div class="level-grid" id="level-grid"></div>
   <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;align-items:center;">
-    <button onclick="openCustomWords('blend')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 1: Custom Words</button>
-    <button onclick="openCustomWords('cs-tiles')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 2: Custom Words</button>
-    <button onclick="openCustomSentences()" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 3: Custom Sentences</button>
+    <button onclick="document.getElementById('level-gate').style.display='none'; openCustomWords('blend')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 1: Custom Words</button>
+    <button onclick="document.getElementById('level-gate').style.display='none'; openCustomWords('cs-tiles')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 2: Custom Words</button>
+    <button onclick="document.getElementById('level-gate').style.display='none'; openCustomSentences()" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 3: Custom Sentences</button>
   </div>
 </div>
 
@@ -463,7 +463,7 @@ function teacherJump(dest){
   </div>
 </div>
 
-<div id="custom-words-screen" style="display:none;position:fixed;inset:0;z-index:10005;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
+<div id="custom-words-screen" style="display:none;position:fixed;inset:0;z-index:20010;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
   <div style="background:white;border-radius:24px;padding:32px 28px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
     <h2 style="margin:0 0 6px;color:#553C9A;font-size:1.5rem;">Custom Word List</h2>
     <p style="margin:0 0 18px;color:#718096;font-size:0.9rem;">Type one word per line. The app will work out the sounds automatically. Use only words from your current teaching level.</p>
@@ -476,7 +476,7 @@ function teacherJump(dest){
   </div>
 </div>
 
-<div id="custom-sentences-screen" style="display:none;position:fixed;inset:0;z-index:10005;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
+<div id="custom-sentences-screen" style="display:none;position:fixed;inset:0;z-index:20010;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
   <div style="background:white;border-radius:24px;padding:32px 28px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
     <h2 style="margin:0 0 6px;color:#553C9A;font-size:1.5rem;">Custom Sentences</h2>
     <p style="margin:0 0 18px;color:#718096;font-size:0.9rem;">Type one sentence per line (max 5 lines). Max 8 words per line. Use simple decodable words.</p>
@@ -1200,7 +1200,10 @@ function openCustomWords(target){
   else document.querySelector('#custom-words-screen h2').innerText='Activity 2: Custom Words';
   document.getElementById('custom-words-screen').style.display='flex';
 }
-function closeCustomWords(){ document.getElementById('custom-words-screen').style.display='none'; }
+function closeCustomWords(){
+  document.getElementById('custom-words-screen').style.display='none';
+  document.getElementById('level-gate').style.display='flex';
+}
 
 function parseWordToPhonemes(word){
   const w=word.toLowerCase().trim();
@@ -1243,8 +1246,9 @@ function startCustomSession(){
     const isProper=word[0]===word[0].toUpperCase()&&word[0]!==word[0].toLowerCase();
     words.push({word,phonemes,graphemes,modeling:word.toLowerCase()+'_e.mp3',properNoun:isProper});
   }
-  closeCustomWords();
+  document.getElementById('custom-words-screen').style.display='none';
   document.getElementById('level-gate').style.display='none';
+  document.getElementById('activity-picker').style.display='none';
   sessionWordList=words; curLevel=1; curWordIdx=0;
   
   if(customActivityTarget === 'blend') {
@@ -1262,7 +1266,10 @@ function openCustomSentences(){
   document.getElementById('custom-sentences-error').innerText='';
   document.getElementById('custom-sentences-screen').style.display='flex';
 }
-function closeCustomSentences(){ document.getElementById('custom-sentences-screen').style.display='none'; }
+function closeCustomSentences(){
+  document.getElementById('custom-sentences-screen').style.display='none';
+  document.getElementById('level-gate').style.display='flex';
+}
 
 function startCustomSentences(){
   const raw=document.getElementById('custom-sentences-input').value;
@@ -1294,7 +1301,7 @@ function startCustomSentences(){
     return { words: parts, illustration: 'treehouse' };
   });
 
-  closeCustomSentences();
+  document.getElementById('custom-sentences-screen').style.display='none';
   document.getElementById('level-gate').style.display='none';
   sessionWordList = null; 
   curLevel = 99;
@@ -3110,9 +3117,9 @@ function teacherJump(dest){
   </div>
   <div class="level-grid" id="level-grid"></div>
   <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;align-items:center;">
-    <button onclick="openCustomWords('blend')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 1: Custom Words</button>
-    <button onclick="openCustomWords('cs-tiles')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 2: Custom Words</button>
-    <button onclick="openCustomSentences()" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 3: Custom Sentences</button>
+    <button onclick="document.getElementById('level-gate').style.display='none'; openCustomWords('blend')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 1: Custom Words</button>
+    <button onclick="document.getElementById('level-gate').style.display='none'; openCustomWords('cs-tiles')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 2: Custom Words</button>
+    <button onclick="document.getElementById('level-gate').style.display='none'; openCustomSentences()" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 3: Custom Sentences</button>
   </div>
 </div>
 
@@ -3126,7 +3133,7 @@ function teacherJump(dest){
   </div>
 </div>
 
-<div id="custom-words-screen" style="display:none;position:fixed;inset:0;z-index:10005;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
+<div id="custom-words-screen" style="display:none;position:fixed;inset:0;z-index:20010;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
   <div style="background:white;border-radius:24px;padding:32px 28px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
     <h2 style="margin:0 0 6px;color:#553C9A;font-size:1.5rem;">Custom Word List</h2>
     <p style="margin:0 0 18px;color:#718096;font-size:0.9rem;">Type one word per line. The app will work out the sounds automatically. Use only words from your current teaching level.</p>
@@ -3139,7 +3146,7 @@ function teacherJump(dest){
   </div>
 </div>
 
-<div id="custom-sentences-screen" style="display:none;position:fixed;inset:0;z-index:10005;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
+<div id="custom-sentences-screen" style="display:none;position:fixed;inset:0;z-index:20010;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
   <div style="background:white;border-radius:24px;padding:32px 28px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
     <h2 style="margin:0 0 6px;color:#553C9A;font-size:1.5rem;">Custom Sentences</h2>
     <p style="margin:0 0 18px;color:#718096;font-size:0.9rem;">Type one sentence per line (max 5 lines). Max 8 words per line. Use simple decodable words.</p>
@@ -3863,7 +3870,10 @@ function openCustomWords(target){
   else document.querySelector('#custom-words-screen h2').innerText='Activity 2: Custom Words';
   document.getElementById('custom-words-screen').style.display='flex';
 }
-function closeCustomWords(){ document.getElementById('custom-words-screen').style.display='none'; }
+function closeCustomWords(){
+  document.getElementById('custom-words-screen').style.display='none';
+  document.getElementById('level-gate').style.display='flex';
+}
 
 function parseWordToPhonemes(word){
   const w=word.toLowerCase().trim();
@@ -3906,8 +3916,9 @@ function startCustomSession(){
     const isProper=word[0]===word[0].toUpperCase()&&word[0]!==word[0].toLowerCase();
     words.push({word,phonemes,graphemes,modeling:word.toLowerCase()+'_e.mp3',properNoun:isProper});
   }
-  closeCustomWords();
+  document.getElementById('custom-words-screen').style.display='none';
   document.getElementById('level-gate').style.display='none';
+  document.getElementById('activity-picker').style.display='none';
   sessionWordList=words; curLevel=1; curWordIdx=0;
   
   if(customActivityTarget === 'blend') {
@@ -3925,7 +3936,10 @@ function openCustomSentences(){
   document.getElementById('custom-sentences-error').innerText='';
   document.getElementById('custom-sentences-screen').style.display='flex';
 }
-function closeCustomSentences(){ document.getElementById('custom-sentences-screen').style.display='none'; }
+function closeCustomSentences(){
+  document.getElementById('custom-sentences-screen').style.display='none';
+  document.getElementById('level-gate').style.display='flex';
+}
 
 function startCustomSentences(){
   const raw=document.getElementById('custom-sentences-input').value;
@@ -3957,7 +3971,7 @@ function startCustomSentences(){
     return { words: parts, illustration: 'treehouse' };
   });
 
-  closeCustomSentences();
+  document.getElementById('custom-sentences-screen').style.display='none';
   document.getElementById('level-gate').style.display='none';
   sessionWordList = null; 
   curLevel = 99;
