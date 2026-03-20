@@ -474,6 +474,19 @@ function teacherJump(dest){
   </div>
 </div>
 
+<div id="custom-sentences-screen" style="display:none;position:fixed;inset:0;z-index:9995;background:linear-gradient(135deg,#553C9A 0%,#805AD5 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
+  <div style="background:white;border-radius:24px;padding:32px 28px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+    <h2 style="margin:0 0 6px;color:#553C9A;font-size:1.5rem;">Custom Sentences</h2>
+    <p style="margin:0 0 18px;color:#718096;font-size:0.9rem;">Type one sentence per line (max 5 lines). Max 8 words per line. Use simple decodable words.</p>
+    <textarea id="custom-sentences-input" rows="6" placeholder="The fat cat sat.&#10;A big pig ran.&#10;Pam can tap it." style="width:100%;box-sizing:border-box;border:2px solid #E2E8F0;border-radius:12px;padding:12px 14px;font-size:1.1rem;font-family:inherit;resize:vertical;outline:none;line-height:1.8;"></textarea>
+    <div id="custom-sentences-error" style="color:#FC8181;font-size:0.85rem;min-height:20px;margin-top:6px;font-weight:600;"></div>
+    <div style="display:flex;gap:12px;margin-top:20px;justify-content:flex-end;">
+      <button onclick="closeCustomSentences()" style="background:#EDF2F7;border:none;border-radius:14px;padding:12px 24px;font-weight:bold;color:#4A5568;cursor:pointer;font-family:inherit;">Cancel</button>
+      <button onclick="startCustomSentences()" style="background:#553C9A;color:white;border:none;border-radius:14px;padding:12px 28px;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 #322659;">Start Activity 3 ▶</button>
+    </div>
+  </div>
+</div>
+
 <div id="history-screen" style="display:none;position:fixed;inset:0;z-index:9995;background:white;flex-direction:column;align-items:center;padding:32px 20px;overflow-y:auto;">
   <div style="width:100%;max-width:680px;">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
@@ -1176,9 +1189,13 @@ function playWelcome(){
 }
 
 // ── Custom words ──
-function openCustomWords(){
+let customActivityTarget = 'blend';
+function openCustomWords(target){
+  customActivityTarget = target;
   document.getElementById('custom-words-input').value='';
   document.getElementById('custom-words-error').innerText='';
+  if(target==='blend') document.querySelector('#custom-words-screen h2').innerText='Activity 1: Custom Words';
+  else document.querySelector('#custom-words-screen h2').innerText='Activity 2: Custom Words';
   document.getElementById('custom-words-screen').style.display='flex';
 }
 function closeCustomWords(){ document.getElementById('custom-words-screen').style.display='none'; }
@@ -1211,7 +1228,7 @@ function startCustomSession(){
   errEl.innerText='';
   const lines=raw.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
   if(!lines.length){errEl.innerText='Please enter at least one word.';return;}
-  if(lines.length>20){errEl.innerText='Maximum 20 words per session.';return;}
+  if(lines.length>10){errEl.innerText='Maximum 10 words per session.';return;}
   const words=[];
   for(const line of lines){
     const word=line.trim();
@@ -1225,9 +1242,59 @@ function startCustomSession(){
   closeCustomWords();
   document.getElementById('level-gate').style.display='none';
   sessionWordList=words; curLevel=1; curWordIdx=0;
-  document.getElementById('app-header').style.visibility='visible';
-  document.getElementById('step-toolbar').style.display='flex';
-  loadWord();
+  
+  if(customActivityTarget === 'blend') {
+    document.getElementById('app-header').style.visibility='visible';
+    document.getElementById('step-toolbar').style.display='flex';
+    loadWord();
+  } else {
+    startCsActivity('tiles');
+  }
+}
+
+let CUSTOM_SENTENCES = null;
+function openCustomSentences(){
+  document.getElementById('custom-sentences-input').value='';
+  document.getElementById('custom-sentences-error').innerText='';
+  document.getElementById('custom-sentences-screen').style.display='flex';
+}
+function closeCustomSentences(){ document.getElementById('custom-sentences-screen').style.display='none'; }
+
+function startCustomSentences(){
+  const raw=document.getElementById('custom-sentences-input').value;
+  const errEl=document.getElementById('custom-sentences-error');
+  errEl.innerText='';
+  const lines=raw.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
+  if(!lines.length){errEl.innerText='Please enter at least one sentence.';return;}
+  if(lines.length>5){errEl.innerText='Maximum 5 sentences per session.';return;}
+  
+  for(let i=0; i<lines.length; i++){
+    const wordsCount = lines[i].split(' ').filter(w=>w.trim().length>0).length;
+    if(wordsCount > 10) { // Safely allow a couple of punctuations, visual is fine up to 10
+      errEl.innerText=`Line ${i+1} has more than 10 words/tokens. Keep it to 8 words.`; return;
+    }
+  }
+
+  CUSTOM_SENTENCES = lines.map(line => {
+    let parts = [];
+    const tokens = line.split(' ').filter(w=>w.trim().length>0);
+    for(const t of tokens) {
+      const match = t.match(/^([\w']+)(.*?)$/);
+      if(match) {
+        if(match[1]) parts.push(match[1]);
+        if(match[2]) parts.push(match[2]);
+      } else {
+        parts.push(t);
+      }
+    }
+    return { words: parts, illustration: 'treehouse' };
+  });
+
+  closeCustomSentences();
+  document.getElementById('level-gate').style.display='none';
+  sessionWordList = null; 
+  curLevel = 99;
+  startSentenceLevel(99);
 }
 
 // ── Activity / level routing ──
@@ -1288,6 +1355,11 @@ function confirmWordCount(n){
     while(pick.length<n&&i<special.length) pick.push(special[i++]);
     sessionWordList=pick;
   }
+  
+  if(wcpLevel===1 && wcpActivity==='blend') {
+    sessionWordList.sort((a, b) => a.phonemes.length - b.phonemes.length);
+  }
+  
   if(wcpActivity==='blend') startLevel(wcpLevel);
   else startActivity(wcpActivity);
 }
@@ -1316,8 +1388,8 @@ function confirmExit(){
   showConfirmModal('Exit this session?<br><span style="font-size:.9rem;font-weight:normal;color:#718096;">Your progress will be lost.</span>',exitToLevels);
 }
 
-function exitToLevels(){
-  stopAudio(); token++;
+function exitToLevels(keepAudio){
+  if(!keepAudio) { stopAudio(); } token++;
   document.body.style.backgroundImage="url('porch.jpg')";
   document.getElementById('app-header').style.visibility='hidden';
   document.getElementById('step-toolbar').style.display='none';
@@ -1611,7 +1683,11 @@ function nextWord(){
   if(wo) sessionLog.push({word:wo.word,level:curLevel,needed_help:sessionHelpCount>0,help_count:sessionHelpCount});
   sessionHelpCount=0;
   if(curWordIdx<wordBank.length-1){ maybeCelebrate(); curWordIdx++; loadWord(); }
-  else{ celebrateLevelComplete(); setTimeout(()=>showSessionSummary(),1800); }
+  else{ 
+    tts('Amazing work! You built all the words in this level!', 0.9);
+    celebrateLevelComplete(); 
+    setTimeout(()=>exitToLevels(true), 1800); 
+  }
 }
 
 function toggleWordVisibility(){ const t=document.getElementById('word-visibility-toggle'); document.getElementById('ref-word').style.display=t.checked?'block':'none'; }
@@ -1907,6 +1983,7 @@ const SENTENCES_18=[
 ];
 
 function activeSentences(){
+  if(curLevel===99)return CUSTOM_SENTENCES;
   if(curLevel===18)return SENTENCES_18; if(curLevel===17)return SENTENCES_17;
   if(curLevel===16)return SENTENCES_16; if(curLevel===15)return SENTENCES_15;
   if(curLevel===14)return SENTENCES_14; if(curLevel===13)return SENTENCES_13;
@@ -2158,11 +2235,16 @@ function showIllustration(){
     imgEl.style.display='block';
     imgEl.onload=()=>{ initScratch(); };
     imgEl.onerror=()=>{ initScratch(); };
-    imgEl.src='https://raw.githubusercontent.com/tonistirtz-a11y/smartblending/main/'+s.illustration+'.jpg';
-imgEl.onerror=()=>{
-  imgEl.onerror=()=>{ initScratch(); };
-  imgEl.src='https://raw.githubusercontent.com/tonistirtz-a11y/smartblending/main/'+s.illustration+'.png';
-};
+    if(s.illustration) {
+      imgEl.src='https://raw.githubusercontent.com/tonistirtz-a11y/smartblending/main/'+s.illustration+'.jpg';
+      imgEl.onerror=()=>{
+        imgEl.onerror=()=>{ initScratch(); };
+        imgEl.src='https://raw.githubusercontent.com/tonistirtz-a11y/smartblending/main/'+s.illustration+'.png';
+      };
+    } else {
+      imgEl.style.display = 'none';
+      initScratch();
+    }
   } else {
     initScratch();
   }
@@ -2544,7 +2626,7 @@ function csDone(){
   document.getElementById('cs-tiles-panel').style.display='none';
   document.getElementById('cs-write-panel').style.display='none';
   tts('Amazing work! You changed all the sounds!',0.9);
-  celebrateLevelComplete();setTimeout(()=>showSessionSummary(),1800);
+  celebrateLevelComplete();setTimeout(()=>exitToLevels(true),1800);
 }
 function csBackToActivities(){document.getElementById('change-sound-view').style.display='none';document.getElementById('app-header').style.visibility='hidden';document.getElementById('activity-picker').style.display='flex';}
 
