@@ -446,8 +446,10 @@ function teacherJump(dest){
     <button onclick="showHistory()" style="background:none;border:none;color:#9F7AEA;font-size:0.85rem;cursor:pointer;font-family:inherit;text-decoration:underline;">📋 Session history</button>
   </div>
   <div class="level-grid" id="level-grid"></div>
-  <div style="margin-top:24px;">
-    <button onclick="openCustomWords()" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 32px;font-size:1.05rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 5px 0 rgba(0,0,0,.2);">✏️ Custom Word List</button>
+  <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;align-items:center;">
+    <button onclick="openCustomWords('blend')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 1: Custom Words</button>
+    <button onclick="openCustomWords('cs-tiles')" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 2: Custom Words</button>
+    <button onclick="openCustomSentences()" style="background:linear-gradient(135deg,#553C9A,#805AD5);color:white;border:none;border-radius:20px;padding:14px 24px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;box-shadow:0 4px 0 rgba(0,0,0,.2);width:100%;max-width:320px;">Activity 3: Custom Sentences</button>
   </div>
 </div>
 
@@ -1207,6 +1209,8 @@ function parseWordToPhonemes(word){
   const phonemeMap={'tch':'tch','sh':'sh','ch':'ch','wh':'wh','ck':'k','ng':'ng','qu':'kw','ss':'s','ll':'l','ff':'f','zz':'z','dd':'d','gg':'g','nn':'n','pp':'p','bb':'b','tt':'t','rr':'r','mm':'m','th':'th_u','a':'a','e':'e','i':'i','o':'o','u':'u','b':'b','c':'k','d':'d','f':'f','g':'g','h':'h','j':'j','k':'k','l':'l','m':'m','n':'n','p':'p','q':'k','r':'r','s':'s','t':'t','v':'v','w':'w','x':'ks','y':'y','z':'z'};
   const graphemeMap={'tch':'tch','sh':'sh','ch':'ch','wh':'wh','ck':'ck','ng':'ng','qu':'qu','ss':'ss','ll':'ll','ff':'ff','zz':'zz','dd':'dd','gg':'gg','nn':'nn','pp':'pp','bb':'bb','tt':'tt','rr':'rr','mm':'mm','th':'th','a':'a','e':'e','i':'i','o':'o','u':'u','b':'b','c':'c','d':'d','f':'f','g':'g','h':'h','j':'j','k':'k','l':'l','m':'m','n':'n','p':'p','q':'q','r':'r','s':'s','t':'t','v':'v','w':'w','x':'x','y':'y','z':'z'};
   let i=0;
+  const phonemes = [];
+  const graphemes = [];
   while(i<w.length){
     let matched=false;
     for(const u of units){
