@@ -2202,6 +2202,8 @@ function sentTeacherConfirm(){
 
 function showIllustration(){
   const s=activeSentences()[sentIdx];
+  if(curLevel===99){ document.getElementById('sent-next-btn').style.display='block'; return; }
+  const s=activeSentences()[sentIdx];
   const wrap=document.getElementById('illus-wrap');
   const svgEl=document.getElementById('illus-svg');
   const imgEl=document.getElementById('illus-img');
