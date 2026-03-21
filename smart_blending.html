@@ -1195,7 +1195,10 @@ function openCustomWords(target){
   document.getElementById('cs-sub-picker').style.display='none';
   document.getElementById('custom-words-screen').style.display='flex';
 }
-function closeCustomWords(){ document.getElementById('custom-words-screen').style.display='none'; }
+function closeCustomWords(){ 
+  document.getElementById('custom-words-screen').style.display='none';
+  document.getElementById('activity-picker').style.display='flex';
+}
 
 function parseWordToPhonemes(word){
   const w=word.toLowerCase().trim();
