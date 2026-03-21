@@ -1634,7 +1634,8 @@ function showSessionSummary(){
   const gb = document.getElementById('sum-global-bundle');
   gb.innerText = RESOURCE_MAP.globalBundle.name;
   gb.href = RESOURCE_MAP.globalBundle.url;
-  
+  const flipbookBtn = document.getElementById('flipbook-btn');
+if(flipbookBtn) flipbookBtn.style.display = (curLevel >= 1 && curLevel <= 6) ? 'flex' : 'none';
   document.getElementById('session-summary').style.display='flex';
   sessionWordList=null;
 }
