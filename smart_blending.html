@@ -2502,16 +2502,9 @@ let cachedCsBoxes = [];
 function csTilePointerDown(e){
   e.preventDefault();csTileActive=e.currentTarget;
   const pf=getPhonemeAudioFile(csTileActive.dataset.phoneme);
-if(pf){
-  synth.cancel();
-  if(curAudio){curAudio.pause();curAudio.currentTime=0;curAudio=null;}
-  setTimeout(()=>{
-    const _a=new Audio(AUDIO_BASE+pf);
-    _a.play().catch(()=>{});
-  }, 50);
-} else {
-  tts(csTileActive.dataset.phoneme,0.9);
-}
+const pf=getPhonemeAudioFile(csTileActive.dataset.phoneme);
+if(pf) playAudio(pf, csTileActive.dataset.phoneme, token, 0.9);
+else tts(csTileActive.dataset.phoneme, 0.9);
 }
   csTileActive.setPointerCapture(e.pointerId);
   const r=csTileActive.getBoundingClientRect();csTileDragOff={x:e.clientX-r.left,y:e.clientY-r.top};
