@@ -1191,8 +1191,8 @@ function openCustomWords(target){
   customActivityTarget = target;
   document.getElementById('custom-words-input').value='';
   document.getElementById('custom-words-error').innerText='';
-  if(target==='blend') document.querySelector('#custom-words-screen h2').innerText='Activity 1: Custom Words';
-  else document.querySelector('#custom-words-screen h2').innerText='Activity 2: Custom Words';
+  document.getElementById('activity-picker').style.display='none';
+  document.getElementById('cs-sub-picker').style.display='none';
   document.getElementById('custom-words-screen').style.display='flex';
 }
 function closeCustomWords(){ document.getElementById('custom-words-screen').style.display='none'; }
