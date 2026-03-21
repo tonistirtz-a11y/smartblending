@@ -1439,7 +1439,7 @@ function loadWord(){
   const bat=document.getElementById('blend-audio-toggle');
   if(bat) bat.checked=blendAudioOn;
   wo.phonemes.forEach(()=>{ const b=document.createElement('div'); b.className='box'; document.getElementById('box-area').appendChild(b); });
-  wo.phonemes.forEach((_,i)=>{ const s=document.createElement('div'); s.className='seg-pill'; s.id='seg-'+i; document.getElementById('seg-row').appendChild(s); });
+wo.phonemes.forEach((_,i)=>{ const segPill=document.createElement('div'); segPill.className='seg-pill'; segPill.id='seg-'+i; document.getElementById('seg-row').appendChild(segPill); });
   const stage=document.getElementById('staging-area');
   const tiles=wo.phonemes.map((p,i)=>({p,g:(wo.graphemes&&wo.graphemes[i])||p,id:i}));
   const origLabels=tiles.map(t=>t.g||t.p);
