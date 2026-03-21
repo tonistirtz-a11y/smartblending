@@ -1261,8 +1261,10 @@ function openCustomSentences(){
   document.getElementById('activity-picker').style.display='none';
   document.getElementById('custom-sentences-screen').style.display='flex';
 }
-function closeCustomSentences(){ document.getElementById('custom-sentences-screen').style.display='none'; }
-
+function closeCustomSentences(){ 
+  document.getElementById('custom-sentences-screen').style.display='none';
+  document.getElementById('activity-picker').style.display='flex';
+}
 function startCustomSentences(){
   const raw=document.getElementById('custom-sentences-input').value;
   const errEl=document.getElementById('custom-sentences-error');
