@@ -1655,7 +1655,25 @@ function showSessionSummary(){
   gb.innerText = RESOURCE_MAP.globalBundle.name;
   gb.href = RESOURCE_MAP.globalBundle.url;
   const flipbookBtn = document.getElementById('flipbook-btn');
-if(flipbookBtn) flipbookBtn.style.display = (curLevel >= 1 && curLevel <= 6) ? 'flex' : 'none';
+const flipbookMap = {
+  '1-6':  { url: 'https://heyzine.com/flip-book/6cdd565078.html',  label: '📖 Now Let\'s Read! (Short Vowels)' },
+  '7':    { url: 'https://heyzine.com/flip-book/743de13dc1.html',   label: '📖 Now Let\'s Read! (Word Endings)' },
+  '8-10': { url: 'https://heyzine.com/flip-book/f4a6241edc.html',   label: '📖 Now Let\'s Read! (Blends)' },
+  '11':   { url: 'https://heyzine.com/flip-book/77723df84b.html',   label: '📖 Now Let\'s Read! (sh digraph)' },
+};
+let fbKey = null;
+if (curLevel >= 1 && curLevel <= 6) fbKey = '1-6';
+else if (curLevel === 7) fbKey = '7';
+else if (curLevel >= 8 && curLevel <= 10) fbKey = '8-10';
+else if (curLevel === 11) fbKey = '11';
+
+if (flipbookBtn && fbKey) {
+  flipbookBtn.href = flipbookMap[fbKey].url;
+  flipbookBtn.innerText = flipbookMap[fbKey].label;
+  flipbookBtn.style.display = 'flex';
+} else if (flipbookBtn) {
+  flipbookBtn.style.display = 'none';
+}
   document.getElementById('session-summary').style.display='flex';
   sessionWordList=null;
 }
