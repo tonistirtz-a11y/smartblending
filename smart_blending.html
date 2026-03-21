@@ -1258,6 +1258,7 @@ let CUSTOM_SENTENCES = null;
 function openCustomSentences(){
   document.getElementById('custom-sentences-input').value='';
   document.getElementById('custom-sentences-error').innerText='';
+  document.getElementById('activity-picker').style.display='none';
   document.getElementById('custom-sentences-screen').style.display='flex';
 }
 function closeCustomSentences(){ document.getElementById('custom-sentences-screen').style.display='none'; }
