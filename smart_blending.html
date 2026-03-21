@@ -2502,10 +2502,8 @@ let cachedCsBoxes = [];
 function csTilePointerDown(e){
   e.preventDefault();csTileActive=e.currentTarget;
   const pf=getPhonemeAudioFile(csTileActive.dataset.phoneme);
-const pf=getPhonemeAudioFile(csTileActive.dataset.phoneme);
-if(pf) playAudio(pf, csTileActive.dataset.phoneme, token, 0.9);
-else tts(csTileActive.dataset.phoneme, 0.9);
-}
+  if(pf) playAudio(pf, csTileActive.dataset.phoneme, token, 0.9);
+  else tts(csTileActive.dataset.phoneme, 0.9);
   csTileActive.setPointerCapture(e.pointerId);
   const r=csTileActive.getBoundingClientRect();csTileDragOff={x:e.clientX-r.left,y:e.clientY-r.top};
   const dl = document.getElementById('drag-layer'); dl.style.pointerEvents = 'auto'; dl.appendChild(csTileActive);
