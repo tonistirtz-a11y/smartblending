@@ -2387,8 +2387,7 @@ let csPraiseIdx=0,csWriteStep=1;
 let csSpellingVisible=false;
 
 const CS_PRAISE_FILES=[['prompt_feedback_correct.mp3',"That's right!"],['prompt_feedback_welldone.mp3','Well done!'],['prompt_feedback_nicework.mp3','Nice work!']];
-function csPlayPraise(){const e=CS_PRAISE_FILES[csPraiseIdx%CS_PRAISE_FILES.length];csPraiseIdx++;playAudio(e[0],e[1],null,0.9);}
-
+function csPlayPraise(){const e=CS_PRAISE_FILES[csPraiseIdx%CS_PRAISE_FILES.length];csPraiseIdx++;tts(e[1],0.9);}
 function openCsSubPicker(){document.getElementById('activity-picker').style.display='none';document.getElementById('cs-sub-picker').style.display='flex';}
 function closeCsSubPicker(){document.getElementById('cs-sub-picker').style.display='none';document.getElementById('activity-picker').style.display='flex';}
 
