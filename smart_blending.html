@@ -1295,7 +1295,7 @@ function startCustomSentences(){
     return { words: parts, illustration: 'treehouse' };
   });
 
-  closeCustomSentences();
+document.getElementById('custom-sentences-screen').style.display='none';
   document.getElementById('level-gate').style.display='none';
   sessionWordList = null; 
   curLevel = 99;
