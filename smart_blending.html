@@ -2492,6 +2492,8 @@ function makeCsTile(phoneme,colors,slot,draggable,word,displayOverride){
   let displayText=displayOverride||phoneme;
   if(!displayOverride&&word&&slot>=0){const gmap=activeGraphemeMap()[word];if(gmap)displayText=gmap[slot]||phoneme;}
   tile.innerText=displayText;tile.dataset.phoneme=phoneme;tile.dataset.slot=slot;
+  tile.setAttribute('aria-hidden','true');
+tile.setAttribute('aria-label','');
   tile.style.cssText='width:88px;height:88px;border-radius:18px;display:flex;justify-content:center;align-items:center;font-size:3rem;font-weight:bold;background:'+colors.bg+';color:'+colors.text+';box-shadow:0 5px 0 rgba(0,0,0,.1);user-select:none;touch-action:none;border:2px solid rgba(255,255,255,.6);';
   if(draggable){tile.style.cursor='grab';tile.onpointerdown=csTilePointerDown;}
   return tile;
