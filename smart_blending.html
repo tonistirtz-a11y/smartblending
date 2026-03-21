@@ -691,6 +691,13 @@ function teacherJump(dest){
 </div>
 
 <script>
+  document.addEventListener('pointerdown', function unlock() {
+  const buf = new (window.AudioContext || window.webkitAudioContext)();
+  buf.resume();
+  const s = new Audio();
+  s.play().catch(()=>{});
+  document.removeEventListener('pointerdown', unlock);
+}, { once: true });
 const RESOURCE_MAP = {
   credentials: "Created by a Dyslexia Therapist | Research-Supported Methods",
   globalBundle: {
